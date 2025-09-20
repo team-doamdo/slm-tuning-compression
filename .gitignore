@@ -1,0 +1,50 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Thumbnails
+._*
+
+# Icon files
+Icon?
+
+# Python
+__pycache__/
+*.py[cod]
+*.so
+
+# Virtual environments
+env/
+venv/
+.venv/
+
+# Jupyter
+.ipynb_checkpoints
+
+# VSCode
+.vscode/
+
+# Logs and databases
+*.log
+*.sqlite3
+*.db
+
+# Hugging Face / ML artifacts
+*.ckpt
+*.safetensors
+*.bin
+*.pt
+*.h5
+*.onnx
+*.tflite
+
+# Temporary files
+*.tmp
+*.swp
+*.bak
+*.orig
+
+# Others
+.idea/
+*.iml
