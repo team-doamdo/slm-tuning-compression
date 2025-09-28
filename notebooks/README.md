@@ -1,7 +1,4 @@
-
----
-
-## 📓 노트북 설명
+## 📓 notebooks 디렉토리 설명
 ### `fine_tuning_pruning.ipynb`
 #### 주요 기능
 1. **모델 로드**
