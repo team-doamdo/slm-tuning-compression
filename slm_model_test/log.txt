@@ -1,0 +1,554 @@
+============================================================
+TOMATO SMART FARM CHATBOT LIGHTWEIGHT PROJECT
+============================================================
+Target: <10s response, <6GB memory
+Model: google/gemma-3-1b-pt
+============================================================
+Device: Apple Silicon GPU (MPS)
+Metal Performance Shaders enabled
+
+============================================================
+
+[Initialization] Loading model and tokenizer...
+============================================================
+Using Apple Silicon GPU (MPS)
+Loading model for Apple Silicon...
+`torch_dtype` is deprecated! Use `dtype` instead!
+Model moved to MPS (Apple GPU)
+Model and tokenizer loaded successfully
+Original model size: 3814.26 MB
+
+============================================================
+STARTING SAFE PRUNING PROCESS
+============================================================
+Identified 49 important token IDs for protection
+
+>>> Attempting pruning with 90% neurons kept...
+Identified 49 important token IDs for protection
+
+[Safe Structured Pruning - FFN]
+============================================================
+Target: Keep 90% of intermediate neurons
+Evaluating layer importance using weight analysis...
+Layer importance ranking (high to low):
+  Layer 23: 100.00
+  Layer 25: 100.00
+  Layer 22: 99.90
+  Layer 24: 99.88
+  Layer 1: 99.78
+  Layer 2: 99.60
+  Layer 0: 99.35
+  Layer 3: 99.25
+  Layer 11: 55.93
+  Layer 17: 55.63
+Protected layers (8): [0, 1, 2, 3, 22, 23, 24, 25]
+Intermediate size: 6912 → 6220 (keeping 90%)
+  Layer 0: Protected (importance: 99.35)
+  Layer 1: Protected (importance: 99.78)
+  Layer 2: Protected (importance: 99.60)
+  Layer 3: Protected (importance: 99.25)
+  Layer 4: Pruned to 6220 neurons
+  Layer 5: Pruned to 6220 neurons
+  Layer 6: Pruned to 6220 neurons
+  Layer 7: Pruned to 6220 neurons
+  Layer 8: Pruned to 6220 neurons
+  Layer 9: Pruned to 6220 neurons
+  Layer 10: Pruned to 6220 neurons
+  Layer 11: Pruned to 6220 neurons
+  Layer 12: Pruned to 6220 neurons
+  Layer 13: Pruned to 6220 neurons
+  Layer 14: Pruned to 6220 neurons
+  Layer 15: Pruned to 6220 neurons
+  Layer 16: Pruned to 6220 neurons
+  Layer 17: Pruned to 6220 neurons
+  Layer 18: Pruned to 6220 neurons
+  Layer 19: Pruned to 6220 neurons
+  Layer 20: Pruned to 6220 neurons
+  Layer 21: Pruned to 6220 neurons
+  Layer 22: Protected (importance: 99.90)
+  Layer 23: Protected (importance: 100.00)
+  Layer 24: Protected (importance: 99.88)
+  Layer 25: Protected (importance: 100.00)
+
+Pruning summary: 18 layers pruned, 0 failed, 8 protected
+
+[Validating Pruned Model]
+============================================================
+Prompt: What causes brown spots on tomato leaves?
+Generated: What causes brown spots on tomato leaves? Of course, the two dishes are not to be 19-yearteroreater There is
+✓ All checks passed
+
+Prompt: What temperature is best for tomato growth?
+Generated: What temperature is best for tomato growth?
+D:F0dax/vitsoclock-bsp hoal id in the
+✓ All checks passed
+
+Prompt: When should I prune tomato suckers?
+Generated: When should I prune tomato suckers?
+
+[T.SHEN KIN] [Stat D_RNLIGLY EFE
+⚠️ Failed checks: no_special_tokens
+
+Prompt: What pH level do tomatoes prefer?
+Generated: What pH level do tomatoes prefer? The Last (Almost) Dr - 100 Onewhde- Or- It'
+✓ All checks passed
+
+Prompt: How often should tomatoes be watered?
+Generated: How often should tomatoes be watered?
+
+It is always a good idea to have fruit and (almost)
+the best, however it
+✓ All checks passed
+
+Validation result: 4/5 tests passed (80%)
+✓ Model validation passed
+✓ Model size after pruning: 3650.05 MB
+✓ Size reduction: 4.3%
+
+>>> Attempting pruning with 85% neurons kept...
+Identified 49 important token IDs for protection
+
+[Safe Structured Pruning - FFN]
+============================================================
+Target: Keep 85% of intermediate neurons
+Evaluating layer importance using weight analysis...
+Layer importance ranking (high to low):
+  Layer 23: 100.00
+  Layer 25: 100.00
+  Layer 22: 99.90
+  Layer 24: 99.88
+  Layer 1: 99.78
+  Layer 2: 99.60
+  Layer 0: 99.35
+  Layer 3: 99.25
+  Layer 11: 55.93
+  Layer 17: 55.63
+Protected layers (8): [0, 1, 2, 3, 22, 23, 24, 25]
+Intermediate size: 6912 → 5875 (keeping 85%)
+  Layer 0: Protected (importance: 99.35)
+  Layer 1: Protected (importance: 99.78)
+  Layer 2: Protected (importance: 99.60)
+  Layer 3: Protected (importance: 99.25)
+  Layer 4: Pruned to 5875 neurons
+  Layer 5: Pruned to 5875 neurons
+  Layer 6: Pruned to 5875 neurons
+  Layer 7: Pruned to 5875 neurons
+  Layer 8: Pruned to 5875 neurons
+  Layer 9: Pruned to 5875 neurons
+  Layer 10: Pruned to 5875 neurons
+  Layer 11: Pruned to 5875 neurons
+  Layer 12: Pruned to 5875 neurons
+  Layer 13: Pruned to 5875 neurons
+  Layer 14: Pruned to 5875 neurons
+  Layer 15: Pruned to 5875 neurons
+  Layer 16: Pruned to 5875 neurons
+  Layer 17: Pruned to 5875 neurons
+  Layer 18: Pruned to 5875 neurons
+  Layer 19: Pruned to 5875 neurons
+  Layer 20: Pruned to 5875 neurons
+  Layer 21: Pruned to 5875 neurons
+  Layer 22: Protected (importance: 99.90)
+  Layer 23: Protected (importance: 100.00)
+  Layer 24: Protected (importance: 99.88)
+  Layer 25: Protected (importance: 100.00)
+
+Pruning summary: 18 layers pruned, 0 failed, 8 protected
+
+[Validating Pruned Model]
+============================================================
+Prompt: What causes brown spots on tomato leaves?
+Generated: What causes brown spots on tomato leaves?
+
+<h2>No-dense Frato, False</h2>
+<h2>(or) 180
+✓ All checks passed
+
+Prompt: What temperature is best for tomato growth?
+Generated: What temperature is best for tomato growth? This is a very simple, but most common. In the room <em>Allot of no less
+✓ All checks passed
+
+Prompt: When should I prune tomato suckers?
+Generated: When should I prune tomato suckers?
+
+The 100th (and the) first, in my not so good -
+
+✓ All checks passed
+
+Prompt: What pH level do tomatoes prefer?
+Generated: What pH level do tomatoes prefer? Nowe Inno (or so we won't say in a few months time, or anywhere
+✓ All checks passed
+
+Prompt: How often should tomatoes be watered?
+Generated: How often should tomatoes be watered?
+  in the right (and some - but usually not in any of
+ish and other drinks
+✓ All checks passed
+
+Validation result: 5/5 tests passed (100%)
+✓ Model validation passed
+✓ Model size after pruning: 3568.18 MB
+✓ Size reduction: 6.5%
+
+>>> Attempting pruning with 80% neurons kept...
+Identified 49 important token IDs for protection
+
+[Safe Structured Pruning - FFN]
+============================================================
+Target: Keep 80% of intermediate neurons
+Evaluating layer importance using weight analysis...
+Layer importance ranking (high to low):
+  Layer 23: 100.00
+  Layer 25: 100.00
+  Layer 22: 99.90
+  Layer 24: 99.88
+  Layer 1: 99.78
+  Layer 2: 99.60
+  Layer 0: 99.35
+  Layer 3: 99.25
+  Layer 11: 55.93
+  Layer 17: 55.63
+Protected layers (8): [0, 1, 2, 3, 22, 23, 24, 25]
+Intermediate size: 6912 → 5529 (keeping 80%)
+  Layer 0: Protected (importance: 99.35)
+  Layer 1: Protected (importance: 99.78)
+  Layer 2: Protected (importance: 99.60)
+  Layer 3: Protected (importance: 99.25)
+  Layer 4: Pruned to 5529 neurons
+  Layer 5: Pruned to 5529 neurons
+  Layer 6: Pruned to 5529 neurons
+  Layer 7: Pruned to 5529 neurons
+  Layer 8: Pruned to 5529 neurons
+  Layer 9: Pruned to 5529 neurons
+  Layer 10: Pruned to 5529 neurons
+  Layer 11: Pruned to 5529 neurons
+  Layer 12: Pruned to 5529 neurons
+  Layer 13: Pruned to 5529 neurons
+  Layer 14: Pruned to 5529 neurons
+  Layer 15: Pruned to 5529 neurons
+  Layer 16: Pruned to 5529 neurons
+  Layer 17: Pruned to 5529 neurons
+  Layer 18: Pruned to 5529 neurons
+  Layer 19: Pruned to 5529 neurons
+  Layer 20: Pruned to 5529 neurons
+  Layer 21: Pruned to 5529 neurons
+  Layer 22: Protected (importance: 99.90)
+  Layer 23: Protected (importance: 100.00)
+  Layer 24: Protected (importance: 99.88)
+  Layer 25: Protected (importance: 100.00)
+
+Pruning summary: 18 layers pruned, 0 failed, 8 protected
+
+[Validating Pruned Model]
+============================================================
+Prompt: What causes brown spots on tomato leaves?
+Generated: What causes brown spots on tomato leaves?
+
+<h2>Your Dinner Garden - Photo</h2>
+
+In the spring and, of course, in A (
+✓ All checks passed
+
+Prompt: What temperature is best for tomato growth?
+Generated: What temperature is best for tomato growth? The author's family of an and a with-his - A - the-one-The
+✓ All checks passed
+
+Prompt: When should I prune tomato suckers?
+Generated: When should I prune tomato suckers? 10 In G Theal-27x As An A. Peruse the authorat
+✓ All checks passed
+
+Prompt: What pH level do tomatoes prefer?
+Generated: What pH level do tomatoes prefer? The Post.
+
+In the last and best-received for their boss’ or her (or)
+⚠️ Failed checks: is_english
+
+Prompt: How often should tomatoes be watered?
+Generated: How often should tomatoes be watered?
+
+Over the next 10-denverase of time we will all know you and his
+✓ All checks passed
+
+Validation result: 4/5 tests passed (80%)
+✓ Model validation passed
+✓ Model size after pruning: 3486.07 MB
+✓ Size reduction: 8.6%
+
+>>> Attempting pruning with 75% neurons kept...
+Identified 49 important token IDs for protection
+
+[Safe Structured Pruning - FFN]
+============================================================
+Target: Keep 75% of intermediate neurons
+Evaluating layer importance using weight analysis...
+Layer importance ranking (high to low):
+  Layer 23: 100.00
+  Layer 25: 100.00
+  Layer 22: 99.90
+  Layer 24: 99.88
+  Layer 1: 99.78
+  Layer 2: 99.60
+  Layer 0: 99.35
+  Layer 3: 99.25
+  Layer 11: 55.93
+  Layer 17: 55.63
+Protected layers (8): [0, 1, 2, 3, 22, 23, 24, 25]
+Intermediate size: 6912 → 5184 (keeping 75%)
+  Layer 0: Protected (importance: 99.35)
+  Layer 1: Protected (importance: 99.78)
+  Layer 2: Protected (importance: 99.60)
+  Layer 3: Protected (importance: 99.25)
+  Layer 4: Pruned to 5184 neurons
+  Layer 5: Pruned to 5184 neurons
+  Layer 6: Pruned to 5184 neurons
+  Layer 7: Pruned to 5184 neurons
+  Layer 8: Pruned to 5184 neurons
+  Layer 9: Pruned to 5184 neurons
+  Layer 10: Pruned to 5184 neurons
+  Layer 11: Pruned to 5184 neurons
+  Layer 12: Pruned to 5184 neurons
+  Layer 13: Pruned to 5184 neurons
+  Layer 14: Pruned to 5184 neurons
+  Layer 15: Pruned to 5184 neurons
+  Layer 16: Pruned to 5184 neurons
+  Layer 17: Pruned to 5184 neurons
+  Layer 18: Pruned to 5184 neurons
+  Layer 19: Pruned to 5184 neurons
+  Layer 20: Pruned to 5184 neurons
+  Layer 21: Pruned to 5184 neurons
+  Layer 22: Protected (importance: 99.90)
+  Layer 23: Protected (importance: 100.00)
+  Layer 24: Protected (importance: 99.88)
+  Layer 25: Protected (importance: 100.00)
+
+Pruning summary: 18 layers pruned, 0 failed, 8 protected
+
+[Validating Pruned Model]
+============================================================
+Prompt: What causes brown spots on tomato leaves?
+Generated: What causes brown spots on tomato leaves? This The L- What for the 2071 = UL. In a to know You
+✓ All checks passed
+
+Prompt: What temperature is best for tomato growth?
+Generated: What temperature is best for tomato growth?
+
+<h2>Cont.</h2>
+<h3>0E-316TH:D)IN V(
+✓ All checks passed
+
+Prompt: When should I prune tomato suckers?
+Generated: When should I prune tomato suckers? In the Case of-the Most Commonly Gtd50 IN THE L2DMLAST
+✓ All checks passed
+
+Prompt: What pH level do tomatoes prefer?
+Generated: What pH level do tomatoes prefer? Many also from a real (in particular) – of discover not to ________________ the knowledge for which
+✓ All checks passed
+
+Prompt: How often should tomatoes be watered?
+Generated: How often should tomatoes be watered?
+The authors-praying in a time and the company of A. Of
+
+<h2>Chf
+✓ All checks passed
+
+Validation result: 5/5 tests passed (100%)
+✓ Model validation passed
+✓ Model size after pruning: 3404.20 MB
+✓ Size reduction: 10.8%
+
+✓ Final pruning: 75% neurons kept, size: 3404.20 MB
+
+============================================================
+LORA FINE-TUNING
+============================================================
+Loaded 415 QA pairs from tomato_qa_dataset.json
+Model converted to float32 for training stability
+
+[Step 4] Applying LoRA Configuration
+============================================================
+  LoRA rank: 4
+  LoRA alpha: 32
+  Target modules: q_proj, v_proj
+  Trainable params: 372,736 (0.04%)
+  Total params: 892,763,264
+
+[Step 5] Starting LoRA Fine-tuning
+============================================================
+Python(8139) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+Training:   0%|                                                                                                    | 0/1245 [00:00<?, ?it/s]huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+        - Avoid using `tokenizers` before the fork if possible
+        - Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+Training:  33%|██████████████████████████▎                                                    | 415/1245 [07:21<14:57,  1.08s/it, loss=13.9]
+Epoch 1/3, Average Loss: 13.8925
+Valid batches: 415/415
+Training:  67%|████████████████████████████████████████████████████▋                          | 830/1245 [14:36<07:07,  1.03s/it, loss=10.2]
+Epoch 2/3, Average Loss: 6.4677
+Valid batches: 415/415
+Training: 100%|██████████████████████████████████████████████████████████████████████████████| 1245/1245 [21:49<00:00,  1.03s/it, loss=8.82]
+Epoch 3/3, Average Loss: 6.1102
+Valid batches: 415/415
+Training: 100%|██████████████████████████████████████████████████████████████████████████████| 1245/1245 [21:49<00:00,  1.05s/it, loss=8.82]
+
+Final model size: 3405.62 MB
+
+============================================================
+PERFORMANCE EVALUATION
+============================================================
+
+[Step 6] Performance Evaluation
+============================================================
+
+Evaluating question 1/15...
+The following generation flags are not valid and may be ignored: ['temperature', 'top_p', 'top_k', 'early_stopping']. Set `TRANSFORMERS_VERBOSITY=info` for more details.
+  Response time: 8.18s
+  Memory used: 695.73MB
+  Response preview: 1000000000000002 of the, 75% ofance on 300000000000000000000000000000000000000000000000000000deer an...
+
+Evaluating question 2/15...
+  Response time: 5.62s
+  Memory used: 24.62MB
+  Response preview: The best way to know if that much heat or any less so 100's of timesh by the time a job with any thi...
+
+Evaluating question 3/15...
+  Response time: 5.55s
+  Memory used: 27.62MB
+  Response preview: Will this field of grass ever be a
+<em>
+,
+, or,
+,
+or,
+, and,
+Is it, in your,
+a, a, a, you know. . . ...
+
+Evaluating question 4/15...
+  Response time: 5.86s
+  Memory used: 84.77MB
+  Response preview: of course not all of you can be acid- it's a matter of fair trade for me and/or my money) at least t...
+
+Evaluating question 5/15...
+  Response time: 5.55s
+  Memory used: 17.98MB
+  Response preview: How can you avoid using the word "white of' of 100000o-the fornt of theer day 29x24 hours time and t...
+
+Evaluating question 6/15...
+  Response time: 5.54s
+  Memory used: 16.98MB
+  Response preview: 1940000000s: of course, no-spin-ever-of-any-for-ever-of-house-on-tomato-off-side-by-3- never-plant-a...
+
+Evaluating question 7/15...
+  Response time: 5.47s
+  Memory used: 6.75MB
+  Response preview: What's a tomato, a week’s-
+https5214wdr.
+.
+.9000000.0.0000000.070000000.00000000000000000.0000000000...
+
+Evaluating question 8/15...
+  Response time: 5.51s
+  Memory used: 16.36MB
+  Response preview: A worker is a few weeks per year of and for this reason, but most likely, your child laborer is one ...
+
+Evaluating question 9/15...
+  Response time: 5.56s
+  Memory used: 6.19MB
+  Response preview: 20 days of dry, The. 17500000000 in the last year-last but not last (not least) and on-daytime-now-d...
+
+Evaluating question 10/15...
+  Response time: 5.50s
+  Memory used: 16.44MB
+  Response preview: Temperature, climatic and other factors of course.
+
+Temperature ofF.A. 30%’N-I'M. 20 to 400000000000...
+
+Evaluating question 11/15...
+  Response time: 5.46s
+  Memory used: 6.38MB
+  Response preview: % of
+of course as well as the ability to make a small or 100% of and not only be able to read up on ...
+
+Evaluating question 12/15...
+  Response time: 5.53s
+  Memory used: 6.38MB
+  Response preview: What's a plant that well be the best of or worst of your crop's health of, or either of or not the. ...
+
+Evaluating question 13/15...
+  Response time: 5.43s
+  Memory used: 6.11MB
+  Response preview: Can I, seed? Of course. . s/m) no.
+m.f. (2) of the above. (1. 05.0 <h2>t) (B) . . 4. The</h2>
+
+The P...
+
+Evaluating question 14/15...
+  Response time: 5.43s
+  Memory used: 6.30MB
+  Response preview: Leafhouse the. E.r.C. This is a question to of. F.1000.l.A.of.<h2>As you can'93. 2014) A.x.(you. (Th...
+
+Evaluating question 15/15...
+  Response time: 5.50s
+  Memory used: 6.28MB
+  Response preview: 20% of and in the way of up to time and other. (The of course) is a few times of and so far. The. Is...
+
+[Step 7] Performance Report
+============================================================
+
+📊 PERFORMANCE SUMMARY
+----------------------------------------
+Model Size: 3405.62 MB ✓ (Target: <6000 MB)
+Avg Response Time: 5.71s
+Max Response Time: 8.18s ✓ (Target: <10s)
+Avg Memory Usage: 1264.24 MB
+Max Memory Usage: 1345.61 MB
+
+📝 SAMPLE RESPONSES
+----------------------------------------
+
+Q1: My tomato leaves have brown spots. What should I do?
+A1: 1000000000000002 of the, 75% ofance on 300000000000000000000000000000000000000000000000000000deer and no longerot beuthe, of course thanan ordern't it...
+Time: 8.18s, Memory: 1096.44MB
+
+Q2: Temperature is 35C in greenhouse. Emergency help needed.
+A2: The best way to know if that much heat or any less so 100's of timesh by the time a job with any thing else than one and.M400,200000.day you can see for a long time of and so we can but then.20tL.larl...
+Time: 5.62s, Memory: 1121.06MB
+
+Q3: When should I start pruning tomato suckers?
+A3: Will this field of grass ever be a
+<em>
+,
+, or,
+,
+or,
+, and,
+Is it, in your,
+a, a, a, you know. . . ,
+, . . . the, so will, to,
+, , 100000000000000000000000000000000</em>
+,
+,...
+Time: 5.55s, Memory: 1148.69MB
+
+✅ Report saved to performance_report.json
+
+[Step 8] Saving optimized model...
+============================================================
+Model saved to ./optimized_tomato_model
+
+============================================================
+PROJECT COMPLETED
+============================================================
+Original size: 3814.26 MB
+After pruning: 3404.20 MB
+Final size: 3405.62 MB
+Total size reduction: 10.7%
+
+Optimization techniques applied:
+- Unstructured pruning (30% sparsity)
+- LoRA fine-tuning
+
+Response time goal (<10s): ACHIEVED
+Memory goal (<6GB): ACHIEVED
+============================================================
+
+Cleanup completed. Project finished.
