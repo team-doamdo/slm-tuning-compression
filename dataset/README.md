@@ -134,3 +134,117 @@ AI 답변 - 구체적 수치/방법 포함
 | 4 | Troubleshooting | 500 | `[STATUS: OK]` | 문제해결 |
 | 5 | **Sensor Status Query** | **500** | 이상값 | **센서 상태 질문**  |
 | 6 | **Sensor Alert with Query** | **500** | **이상값** | **센서 경고 + 질문** |
+
+
+## 4. **subcategory** (필수)
+
+### disease_management
+- `diagnosis` - 병해충 진단
+- `treatment` - 치료 방법
+- `prevention` - 예방 전략
+- `pest_control` - 해충 관리
+- `organic` - 유기농 방제
+
+### environmental_control
+- `temperature` - 온도 관리
+- `humidity` - 습도 제어
+- `light` - 광 관리
+- `co2` - CO2 조절
+- `ventilation` - 환기 시스템
+
+### equipment_sensors
+- `sensor_setup` - 센서 설치
+- `calibration` - 센서 보정
+- `maintenance` - 장비 유지보수
+- `automation` - 자동화 시스템
+
+### troubleshooting
+- `physiological` - 생리장해
+- `stress` - 환경 스트레스
+- `emergency` - 긴급 상황
+- `diagnosis` - 문제 진단
+
+### sensor_status_query
+- `temperature_check` - 온도 상태
+- `humidity_check` - 습도 상태
+- `co2_check` - CO2 상태
+- `light_check` - 조도 상태
+
+### sensor_alert_with_query
+- `temp_alert` - 온도 경고
+- `humidity_alert` - 습도 경고
+- `co2_alert` - CO2 경고
+- `light_alert` - 조도 경고
+
+---
+
+## 5. **source** (필수)
+
+공신력 있는 출처 명시:
+- `"Cornell Extension"`
+- `"USDA Plant Disease Guide"`
+- `"UC Davis Research"`
+- `"Wageningen University"`
+- `"Journal of Agricultural Engineering 2024"`
+
+---
+
+## 데이터 예시
+
+### 카테고리 1-4 예시
+```json
+{
+  "instruction": "[STATUS: OK] My tomato leaves have brown spots with yellow halos. What should I do?",
+  "output": "[STATUS: OK] This appears to be early blight caused by Alternaria solani. Remove affected leaves immediately, improve air circulation, and apply copper-based fungicide every 7-10 days.",
+  "category": "disease_management",
+  "subcategory": "diagnosis",
+  "source": "Cornell Extension"
+}
+```
+
+### 카테고리 5 예시
+```json
+{
+  "instruction": "[STATUS: TEMP_HIGH(35)] What immediate actions should I take?",
+  "output": "[WARNING: TEMP_HIGH(35). Immediately increase ventilation and activate cooling systems.] Provide shading or apply misting to rapidly reduce greenhouse temperature.",
+  "category": "sensor_status_query",
+  "subcategory": "temperature_check",
+  "source": "USDA Guidelines"
+}
+```
+
+### 카테고리 6 예시
+```json
+{
+  "instruction": "[STATUS: HUM_HIGH(95)] When should I start pruning tomato suckers?",
+  "output": "[WARNING: HUM_HIGH(95). Reduce irrigation and activate dehumidifiers immediately.] Start when suckers are 5-7cm long, remove all below first flower cluster.",
+  "category": "sensor_alert_with_query",
+  "subcategory": "humidity_alert",
+  "source": "UC Davis Research"
+}
+```
+
+---
+
+## 토마토 스마트팜 정상 범위 참고값
+
+### Temperature
+- **정상 범위**: 20-25°C
+- **출처**: 농촌진흥청 작물 재배 가이드, Deep learning-driven IoT solution for smart tomato farming
+
+### Humidity
+- **정상 범위**: 65-75%
+- **출처**: Deep learning-driven IoT solution for smart tomato farming 논문
+
+### CO2
+- **정상 범위**: 800-1000ppm
+
+### Light
+센서에서는 lux 단위로 출력(순간 광도) → DLI(하루 총광량)로 환산해서 정상 범위 여부 판단
+
+#### 순간 광도 (Lux 기준)
+- **하한선**: 15,000 lux (이상이어야 최소 생육 유지)
+- **권장치**: 45,000-70,000 lux (맑은 날 직사광 수준, DLI 충족에 유리)
+
+#### DLI (Daily Light Integral)
+- **정상 범위**: 15-20 mol/m²/day
