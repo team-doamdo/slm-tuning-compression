@@ -79,7 +79,7 @@
   - Quality of auto-generated reports
  
 
-## 7. ## Project Structure
+## 7. Project Structure
 
 **⚠️ 주의**: 프루닝된 모델은 레이어별로 크기가 다르므로 일반 Hugging Face 방식으로 로드 불가
 
