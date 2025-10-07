@@ -30,3 +30,4 @@ pyyaml
 # Evaluation 
 evaluate>=0.4.0
 rouge-score>=0.1.2
+psutil>=5.9.0

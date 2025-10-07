@@ -20,8 +20,13 @@ from src.utils.data_loader import load_json, save_json
 
 def auto_load_model(model_path, device='cuda'):
     """자동으로 원본/프루닝 모델 감지해서 로드"""
+
+    # device 자동 감지
+    if device is None:
+        device = 'cuda' if torch.cuda.is_available() else 'cpu'
     
     print(f"모델 자동 로드: {model_path}")
+    print(f"사용 device: {device}")
     
     # 프루닝 모델인지 확인
     pruned_structure_path = os.path.join(model_path, 'pruned_structure.json')
@@ -37,11 +42,17 @@ def auto_load_model(model_path, device='cuda'):
 class UniversalModelEvaluator:
     """범용 모델 평가 클래스"""
     
-    def __init__(self, model, tokenizer, device='cuda'):
+    def __init__(self, model, tokenizer, device=None):
+      # device 자동 감지
+      if device is None:
+          device = 'cuda' if torch.cuda.is_available() else 'cpu'
+
       self.model = model
       self.tokenizer = tokenizer
       self.device = device
       self.model.eval()
+
+      print(f"Evaluator device: {self.device}")
       
       # BLEU/ROUGE 메트릭 로드
       self.bleu = None
@@ -95,24 +106,66 @@ class UniversalModelEvaluator:
         }
 
     def get_model_info(self):
-        """모델 기본 정보"""
-        total_params = sum(p.numel() for p in self.model.parameters())
-        
-        # 메모리 사용량 측정
-        if torch.cuda.is_available():
-            torch.cuda.empty_cache()
-            model_memory_mb = torch.cuda.memory_allocated() / (1024**2)
-        else:
-            # CPU 메모리 추정
-            param_memory = sum(p.element_size() * p.numel() for p in self.model.parameters())
-            model_memory_mb = param_memory / (1024**2)
-        
-        return {
-            "total_parameters": total_params,
-            "model_memory_mb": model_memory_mb,
-            "model_dtype": str(self.model.dtype),
-            "device": str(self.device)
-        }
+      """모델 기본 정보 - CPU/GPU 모두 정확한 메모리 측정"""
+      total_params = sum(p.numel() for p in self.model.parameters())
+      
+      # 메모리 사용량 측정
+      if torch.cuda.is_available() and self.device == 'cuda':
+          # GPU: CUDA 메모리 직접 측정
+          torch.cuda.empty_cache()
+          model_memory_mb = torch.cuda.memory_allocated() / (1024**2)
+          measurement_method = "CUDA allocated"
+          
+      else:
+          # CPU: 정확한 메모리 측정 
+          try:
+              import psutil
+              import os
+              import gc
+              
+              # 가비지 컬렉션으로 정확도 향상
+              gc.collect()
+              
+              # PyTorch 텐서 메모리 계산
+              model_tensor_memory = 0
+              
+              # Parameters 메모리
+              for param in self.model.parameters():
+                  model_tensor_memory += param.numel() * param.element_size()
+              
+              # Buffers 메모리 (batch norm의 running_mean 등)
+              for buffer in self.model.buffers():
+                  model_tensor_memory += buffer.numel() * buffer.element_size()
+              
+              model_memory_mb = model_tensor_memory / (1024**2)
+              measurement_method = "PyTorch tensors (params + buffers)"
+              
+              # 프로세스 전체 메모리 (참고용)
+              process = psutil.Process(os.getpid())
+              process_memory_mb = process.memory_info().rss / (1024**2)
+              
+              # 디버깅 정보 출력
+              print(f"  모델 메모리 (텐서): {model_memory_mb:.2f} MB")
+              print(f"  프로세스 전체 메모리: {process_memory_mb:.2f} MB")
+              
+          except ImportError:
+              # psutil이 설치 안 된 경우 fallback
+              print("  ⚠️ Warning: psutil not installed. Using parameter-only estimation.")
+              print("  ⚠️ Install: pip install psutil")
+              
+              # Fallback: 파라미터만 계산
+              param_memory = sum(p.element_size() * p.numel() 
+                              for p in self.model.parameters())
+              model_memory_mb = param_memory / (1024**2)
+              measurement_method = "Parameters only (estimated)"
+      
+      return {
+          "total_parameters": total_params,
+          "model_memory_mb": model_memory_mb,
+          "measurement_method": measurement_method,  # 측정 방식 추가
+          "model_dtype": str(self.model.dtype),
+          "device": str(self.device)
+      }
 
     def evaluate_generation(self, test_prompts, max_new_tokens=20):
         """생성 성능 평가"""
@@ -296,9 +349,13 @@ def evaluate_model_universal(
     print("범용 모델 평가 시작")
     print("=" * 70)
     
+    # Device 자동 감지
+    device = 'cuda' if torch.cuda.is_available() else 'cpu'
+    print(f"Using device: {device}")
+    
     # 1. 모델 로드 (자동 감지)
     try:
-        model, tokenizer = auto_load_model(model_path)
+        model, tokenizer = auto_load_model(model_path, device=device)
     except Exception as e:
         print(f"모델 로드 실패: {e}")
         return None
