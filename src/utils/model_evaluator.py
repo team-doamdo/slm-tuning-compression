@@ -9,6 +9,15 @@ import argparse
 from tqdm import tqdm
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
+try:
+    from peft import PeftModel
+    PEFT_AVAILABLE = True
+except ImportError:
+    print("Warning: peft not installed. LoRA models won't be supported.")
+    print("Install with: pip install peft")
+    PeftModel = None
+    PEFT_AVAILABLE = False
+
 # 프로젝트 경로 추가
 project_root = "/content/drive/MyDrive/smartfarm_pruning"
 if project_root not in sys.path:
@@ -18,8 +27,8 @@ from src.utils.model_loader import load_model, load_pruned_model
 from src.utils.data_loader import load_json, save_json
 
 
-def auto_load_model(model_path, device='cuda'):
-    """자동으로 원본/프루닝 모델 감지해서 로드"""
+def auto_load_model(model_path, device=None):
+    """자동으로 원본/프루닝/LoRA 모델 감지해서 로드"""
 
     # device 자동 감지
     if device is None:
@@ -27,6 +36,42 @@ def auto_load_model(model_path, device='cuda'):
     
     print(f"모델 자동 로드: {model_path}")
     print(f"사용 device: {device}")
+    
+    # LoRA adapter인지 확인 (adapter_config.json 존재 여부)
+    adapter_config_path = os.path.join(model_path, 'adapter_config.json')
+    
+    if os.path.exists(adapter_config_path):
+        print("LoRA adapter로 감지됨")
+        
+        # adapter_config에서 base_model_name_or_path 읽기
+        import json
+        with open(adapter_config_path, 'r') as f:
+            adapter_config = json.load(f)
+        
+        base_model_path = adapter_config.get('base_model_name_or_path', 'models/pruned_activation/')
+        
+        print(f"  Base model: {base_model_path}")
+        print(f"  LoRA adapter: {model_path}")
+        
+        # Base 모델 로드 (프루닝된 모델)
+        from peft import PeftModel
+        
+        base_model, tokenizer = load_pruned_model(base_model_path, device=device, dtype=torch.float32)
+        
+        # LoRA adapter 로드
+        print("\n LoRA adapter 로드 중...")
+        model = PeftModel.from_pretrained(
+            base_model,
+            model_path,
+            torch_dtype=torch.float32
+        )
+        
+        # Merge
+        print(" LoRA merge 중...")
+        model = model.merge_and_unload()
+        print(" LoRA merge 완료!")
+        
+        return model, tokenizer
     
     # 프루닝 모델인지 확인
     pruned_structure_path = os.path.join(model_path, 'pruned_structure.json')
@@ -329,7 +374,8 @@ def evaluate_model_universal(
     evaluate_id,
     test_data_path=None,
     save_path=None,
-    custom_prompts=None
+    custom_prompts=None,
+    device=None
 ):
     """
     범용 모델 평가 함수
@@ -420,6 +466,8 @@ if __name__ == "__main__":
     parser.add_argument('result_filename', type=str, help='결과 파일명 (evaluate_id로 사용)')
     parser.add_argument('--test_data', type=str, default='data/split/final_validation.json',
                         help='테스트 데이터 경로')
+    parser.add_argument('--device', type=str, default=None, choices=['cuda', 'cpu', None],
+                        help='디바이스 (cuda/cpu/None=자동감지)')
     
     args = parser.parse_args()
     
@@ -431,5 +479,6 @@ if __name__ == "__main__":
         model_path=args.model_path,
         evaluate_id=args.result_filename,
         test_data_path=args.test_data,
-        save_path=save_path
+        save_path=save_path,
+        device=args.device
     )
