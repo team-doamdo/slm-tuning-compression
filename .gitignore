@@ -32,7 +32,7 @@ venv/
 
 # Hugging Face / ML artifacts
 *.ckpt
-*.safetensors
+# *.safetensors
 *.bin
 *.pt
 *.h5
