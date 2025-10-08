@@ -192,21 +192,37 @@ trainer = SFTTrainer(
 
 trainer.train()
 
+"""LoRA 어댑터 저장"""
+
+"""학습 후 LoRA 어댑터 저장"""
+
+# LoRA 어댑터(가중치)만 별도로 저장
+LORA_ADAPTER_DIR = "/content/lora-adapter"
+os.makedirs(LORA_ADAPTER_DIR, exist_ok=True)
+
+# 학습된 모델에서 LoRA 가중치만 추출하여 저장
+model.save_pretrained(LORA_ADAPTER_DIR, safe_serialization=True)
+tokenizer.save_pretrained(LORA_ADAPTER_DIR)
+
+print(f"LoRA adapter weights saved to: {LORA_ADAPTER_DIR}")
+
 """LoRA 병합 및 저장"""
 
 from peft import PeftModel
 
-# 이미 프루닝 구조로 복원된 base_model 사용
-model = PeftModel.from_pretrained(base_model, "/content/lora-out")
+LAST_CKPT = "/content/lora-out/checkpoint-616"
+
+# base_model은 프루닝된 Gemma3-1B 로드된 상태여야 함
+model = PeftModel.from_pretrained(base_model, LAST_CKPT)
 
 # LoRA 병합
 merged_model = model.merge_and_unload()
 
-# 병합 모델 저장 (.safetensors 생성됨)
+# 병합 모델 저장
 merged_model.save_pretrained("/content/lora-merged", safe_serialization=True)
 tokenizer.save_pretrained("/content/lora-merged")
 
-print("Fully merged model saved to /content/lora-merged (from pruned base_model)")
+print(f"Fully merged model saved to /content/lora-merged (from {LAST_CKPT})")
 
 """하이브리드 규칙 기반 추론 래퍼"""
 
@@ -241,7 +257,7 @@ for i, layer in enumerate(merged_model.model.layers):
         layer.mlp.gate_proj = nn.Linear(in_dim, new_dim, bias=False)
         layer.mlp.up_proj = nn.Linear(in_dim, new_dim, bias=False)
         layer.mlp.down_proj = nn.Linear(new_dim, in_dim, bias=False)
-        print(f"🔧 Layer {i}: MLP resized to {new_dim}")
+        print(f"Layer {i}: MLP resized to {new_dim}")
 
 # --- 가중치 로드 전 ---
 merged_model.resize_token_embeddings(len(tokenizer))
@@ -304,10 +320,10 @@ def hybrid_infer(user_question, temp=None, hum=None, co2=None, light=None, max_n
 """추론 테스트"""
 
 print("\n[정상 상태 예시]")
-hybrid_infer("How should I care for my tomato plants this week?", temp=23, hum=70, co2=900, light=50000)
+hybrid_infer("Is the condition good?", temp=23, hum=70, co2=900, light=50000)
 
 print("\n[온도 높은 상황 예시]")
-hybrid_infer("temperature is good?", temp=3335, hum=70, co2=900, light=50000)
+hybrid_infer("light is good?", temp=55, hum=70, co2=900, light=50000)
 
 print("\n[습도 낮은 상황 예시]")
-hybrid_infer("is the enviroment okay?", temp=22, hum=1240, co2=850, light=48000)
+hybrid_infer("is the enviroment okay?", temp=22, hum=50, co2=850, light=48000)
