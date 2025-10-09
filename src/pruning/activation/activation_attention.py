@@ -30,7 +30,7 @@ MAX_LENGTH = 512
 MAX_SAMPLES = None  # 테스트 시 같은 수 사용 (None = 전체)
 
 # 3. 경로 (동일한 모델과 데이터 사용)
-MODEL_PATH = "models/original/gemma-3-1b-pt"
+MODEL_PATH = "models/original/gemma-3-1b-it"
 DATA_PATH = "data/split/pruning_activation.json"
 OUTPUT_FILE = "results/activation_heads_to_prune.json"
 
@@ -131,7 +131,7 @@ def measure_head_activation(model, tokenizer, data_samples):
                 # 토크나이징
                 inputs = tokenizer(
                     text,
-                    return_tensors="pt",
+                    return_tensors="it",
                     max_length=MAX_LENGTH,
                     truncation=True,
                     add_special_tokens=True
