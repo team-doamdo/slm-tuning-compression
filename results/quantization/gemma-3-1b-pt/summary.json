@@ -1,0 +1,17 @@
+{
+  "summary": {
+    "dataset_size": 600,
+    "success_rate": 0.5983333333333334,
+    "exact_match_accuracy": 0.0,
+    "keyword_match_score": 0.16850361972630845,
+    "bleu_rouge": {
+      "bleu": 0.022129741740929852,
+      "rouge1": 0.1578922967544406,
+      "rouge2": 0.05315962633185363,
+      "rougeL": 0.12746044006931029
+    },
+    "avg_response_time": 1.0001662229096988,
+    "model_parameters": 855362944,
+    "model_memory_mb": 3294.0
+  }
+}
