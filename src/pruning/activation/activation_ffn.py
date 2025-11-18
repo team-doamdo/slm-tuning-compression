@@ -83,7 +83,7 @@ LAYER_IMPORTANCE_SCALE = {
 }
 
 # Paths
-MODEL_PATH = "models/original/gemma-3-1b-it"
+MODEL_PATH = "models/original/gemma-3-4b-it"
 DATA_PATH = "data/split/pruning_activation.json"
 OUTPUT_PATH = "results/activation_neurons_to_prune_it.json"
 STATS_OUTPUT_PATH = "results/activation_neuron_stats.json"  # 선택적 통계 저장
