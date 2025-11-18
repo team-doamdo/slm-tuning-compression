@@ -385,7 +385,7 @@ if __name__ == "__main__":
     print("=" * 60)
     
     # 경로 설정
-    model_path = "models/original/gemma-3-1b-it"
+    model_path = "models/original/gemma-3-4b-it"
     heads_path = "results/activation_heads_to_prune_it.json"
     neurons_path = "results/activation_neurons_to_prune_it.json"
     output_path = "models/pruned_activation_it"
