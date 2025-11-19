@@ -50,6 +50,7 @@ LAYER_IMPORTANCE_SCALE = {
 MODEL_PATH = "models/original/gemma-3-1b-pt"
 DATA_PATH = "data/split/pruning_activation.json"
 OUTPUT_PATH = "results/gradient_neurons_to_prune.json"
+STATS_OUTPUT_PATH = "results/gradient_neuron_stats.json"
 
 # Technical Settings  
 DEVICE = 'cuda' if torch.cuda.is_available() else 'cpu'
@@ -57,6 +58,7 @@ DTYPE = torch.float32
 
 # Debug Settings
 VERBOSE = True
+SAVE_INTERMEDIATE_STATS = True
 # ====================================
 
 
@@ -316,17 +318,35 @@ def select_neurons_to_prune(neuron_scores):
     # 중요도 정렬 (오름차순)
     all_neurons.sort(key=lambda x: x['score'])
     
-    # 프루닝 대상 선택
+    # 프루닝 대상 선택 (레이어별 제약 조건 적용)
     total_neurons = len(all_neurons)
     target_prune_count = int(total_neurons * PRUNE_RATIO)
     
     neurons_to_prune = []
+    layer_prune_counts = {i: 0 for i in range(len(neuron_scores))}
     
     for neuron in all_neurons:
+        layer_idx = neuron['layer']
+        current_layer_neurons = layer_neuron_counts[layer_idx]
+        pruned_in_layer = layer_prune_counts[layer_idx]
+        
+        # 레이어별 제약 확인
+        remaining_after_prune = current_layer_neurons - pruned_in_layer - 1
+        
+        # 1. 최소 뉴런 수 확인
+        if remaining_after_prune < MIN_NEURONS_PER_LAYER:
+            continue
+            
+        # 2. 최대 프루닝 비율 확인
+        max_prunable_in_layer = int(current_layer_neurons * MAX_PRUNE_PER_LAYER)
+        if pruned_in_layer >= max_prunable_in_layer:
+            continue
+        
         neurons_to_prune.append({
-            'layer': neuron['layer'],
+            'layer': layer_idx,
             'neuron': neuron['neuron']
         })
+        layer_prune_counts[layer_idx] += 1
         
         if len(neurons_to_prune) >= target_prune_count:
             break
@@ -338,7 +358,57 @@ def select_neurons_to_prune(neuron_scores):
     print(f"  Actually pruning: {len(neurons_to_prune)}")
     print(f"  Actual ratio: {len(neurons_to_prune)/total_neurons:.1%}")
     
+    if VERBOSE:
+        print("\nNeurons to prune per layer:")
+        for layer_idx in sorted(layer_prune_counts.keys()):
+            total_in_layer = layer_neuron_counts[layer_idx]
+            prune_count = layer_prune_counts[layer_idx]
+            if prune_count > 0:
+                prune_pct = (prune_count / total_in_layer) * 100
+                print(f"  Layer {layer_idx}: {prune_count}/{total_in_layer} ({prune_pct:.1f}%)")
+    
     return neurons_to_prune
+
+
+def save_statistics(neuron_statistics, neuron_scores, output_path):
+    """중간 통계 저장"""
+    if not SAVE_INTERMEDIATE_STATS:
+        return
+    
+    stats_data = {
+        'config': {
+            'prune_ratio': PRUNE_RATIO,
+            'batch_size': BATCH_SIZE,
+            'max_samples': MAX_SAMPLES,
+            'use_swiglu': USE_SWIGLU,
+            'importance_weights': IMPORTANCE_WEIGHTS
+        },
+        'layer_statistics': {},
+        'layer_scores': {}
+    }
+    
+    # 통계를 JSON 직렬화 가능한 형태로 변환
+    for layer_key, stats in neuron_statistics.items():
+        layer_idx = int(layer_key.split('_')[1])
+        stats_data['layer_statistics'][layer_idx] = {
+            'mean_gradient': float(np.mean(stats['mean'])),
+            'max_gradient': float(np.mean(stats['max'])),
+            'std_gradient': float(np.mean(stats['std'])),
+            'zero_ratio': float(np.mean(stats['zero_ratio'])),
+            'num_zero': int((np.array(stats['zero_ratio']) > 0.9).sum())
+        }
+    
+    for layer_key, scores in neuron_scores.items():
+        layer_idx = int(layer_key.split('_')[1])
+        stats_data['layer_scores'][layer_idx] = {
+            'min_score': float(np.min(scores)),
+            'max_score': float(np.max(scores)),
+            'mean_score': float(np.mean(scores))
+        }
+    
+    save_json(stats_data, output_path)
+    if VERBOSE:
+        print(f"Statistics saved to {output_path}")
 
 
 def main():
@@ -389,6 +459,10 @@ def main():
     print(f"\n[5/5] Saving results...")
     save_json(neurons_to_prune, OUTPUT_PATH)
     print(f"Results saved to {OUTPUT_PATH}")
+    
+    # 통계 저장
+    if SAVE_INTERMEDIATE_STATS:
+        save_statistics(neuron_statistics, neuron_scores, STATS_OUTPUT_PATH)
     
     print("\n" + "=" * 60)
     print("Pruning target selection completed!")
