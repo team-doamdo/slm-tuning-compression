@@ -45,12 +45,16 @@ GC_COLLECT_EVERY = 10
 
 # 6. 디버깅 (테스트 시 동일하게)
 DEBUG_MODE = False  # True 시 MAX_SAMPLES=10 자동 설정
+
+# 7. 통계 수집 옵션 (NEW)
+COLLECT_STATISTICS = True  # 상세 통계 수집 여부
+GRADIENT_THRESHOLD = 1e-6  # Dead head 판단 임계값
 # ====================================
 
 
 def measure_head_gradient(model, tokenizer, data_samples):
     """
-    Gradient 기반으로 attention heads 중요도 측정
+    Gradient 기반으로 attention heads 중요도 측정 (통계 강화)
     
     Args:
         model: 로드된 모델
@@ -58,10 +62,10 @@ def measure_head_gradient(model, tokenizer, data_samples):
         data_samples: 중요도 측정용 데이터 샘플들
         
     Returns:
-        head_outputs: Dict[layer_idx][head_idx] = [gradient_values]
+        head_statistics: Dict[layer_idx][head_idx] = {mean, std, max, count}
     """
     
-    print("Attention heads gradient 측정 중...")
+    print("Attention heads gradient 측정 중 (통계 수집)...")
     
     config = model.config
     num_layers = config.num_hidden_layers
@@ -72,30 +76,40 @@ def measure_head_gradient(model, tokenizer, data_samples):
     print(f"  데이터 샘플: {len(data_samples)}개")
     print(f"  배치 크기: {BATCH_SIZE}, 최대 길이: {MAX_LENGTH}")
     
-    # 각 헤드의 gradient 값 수집
-    head_outputs = {layer_idx: {head_idx: [] for head_idx in range(num_q_heads)} 
-                    for layer_idx in range(num_layers)}
+    # 각 헤드의 통계 정보 수집
+    head_statistics = {}
+    for layer_idx in range(num_layers):
+        head_statistics[layer_idx] = {}
+        for head_idx in range(num_q_heads):
+            head_statistics[layer_idx][head_idx] = {
+                'gradients': [],  # 각 배치의 gradient 값들
+                'count': 0
+            }
     
     # Hook: attention output에서 각 헤드별 gradient 측정
     def create_hook(layer_idx):
         def hook(module, grad_input, grad_output):
             try:
-                # grad_output[0]는 gradient [batch, seq_len, hidden_size]
                 if grad_output and grad_output[0] is not None:
-                    gradient = grad_output[0]
+                    gradient = grad_output[0].detach()  # 메모리 효율을 위해 detach
                     
                     batch_size, seq_len, hidden_size = gradient.shape
                     
                     # [batch, seq_len, num_heads, head_dim]로 reshape
                     grad_per_head = gradient.view(batch_size, seq_len, num_q_heads, head_dim)
                     
-                    # 각 헤드의 평균 gradient 크기 계산
+                    # 각 헤드의 gradient 통계 계산
                     for head_idx in range(num_q_heads):
-                        head_grad = grad_per_head[:, :, head_idx, :].abs().mean().item()
-                        head_outputs[layer_idx][head_idx].append(head_grad)
+                        head_grad = grad_per_head[:, :, head_idx, :].abs()
+                        mean_grad = head_grad.mean().item()
+                        
+                        # 통계 저장
+                        head_statistics[layer_idx][head_idx]['gradients'].append(mean_grad)
+                        head_statistics[layer_idx][head_idx]['count'] += 1
                         
             except Exception as e:
-                pass
+                if DEBUG_MODE:
+                    print(f"Hook error at layer {layer_idx}: {e}")
         return hook
     
     # Hook 등록
@@ -109,7 +123,7 @@ def measure_head_gradient(model, tokenizer, data_samples):
             print(f"⚠ 레이어 {layer_idx} hook 등록 실패: {e}")
     
     # Forward + Backward pass
-    model.train()  # gradient 계산을 위해 train mode
+    model.train()
     
     for idx, sample in enumerate(tqdm(data_samples, desc="데이터 처리")):
         try:
@@ -135,18 +149,18 @@ def measure_head_gradient(model, tokenizer, data_samples):
                 add_special_tokens=True
             ).to(model.device)
             
-            # labels 생성 (language modeling loss)
+            # labels 생성
             labels = inputs["input_ids"].clone()
             
-            # Forward pass
+            # Forward + Backward pass
             model.zero_grad()
             outputs = model(**inputs, labels=labels, return_dict=True)
             loss = outputs.loss
-            
-            # Backward pass (gradient 계산)
             loss.backward()
             
             # 메모리 관리
+            del inputs, labels, outputs, loss
+            
             if (idx + 1) % CLEAR_CACHE_EVERY == 0:
                 if torch.cuda.is_available():
                     torch.cuda.empty_cache()
@@ -163,43 +177,99 @@ def measure_head_gradient(model, tokenizer, data_samples):
     for hook in hooks:
         hook.remove()
     
-    # 수집 확인
-    collected_heads = sum(len([v for v in heads.values() if len(v) > 0]) 
-                         for heads in head_outputs.values())
-    print(f"Gradient 측정 완료")
-    print(f"   수집된 헤드: {collected_heads}개 (예상: {num_layers * num_q_heads}개)")
+    # 최종 통계 계산
+    print("\n통계 계산 중...")
+    final_statistics = {}
     
-    return head_outputs
+    for layer_idx in range(num_layers):
+        final_statistics[layer_idx] = {}
+        
+        for head_idx in range(num_q_heads):
+            grads = head_statistics[layer_idx][head_idx]['gradients']
+            
+            if len(grads) > 0:
+                mean_val = np.mean(grads)
+                std_val = np.std(grads)
+                max_val = np.max(grads)
+                min_val = np.min(grads)
+                
+                # Dead head 체크
+                is_dead = mean_val < GRADIENT_THRESHOLD
+                
+                final_statistics[layer_idx][head_idx] = {
+                    'mean': float(mean_val),
+                    'std': float(std_val),
+                    'max': float(max_val),
+                    'min': float(min_val),
+                    'count': len(grads),
+                    'is_dead': bool(is_dead)
+                }
+            else:
+                final_statistics[layer_idx][head_idx] = {
+                    'mean': 0.0,
+                    'std': 0.0,
+                    'max': 0.0,
+                    'min': 0.0,
+                    'count': 0,
+                    'is_dead': True
+                }
+    
+    # 수집 통계 출력
+    total_heads = num_layers * num_q_heads
+    collected = sum(1 for l in final_statistics.values() 
+                   for h in l.values() if h['count'] > 0)
+    dead_heads = sum(1 for l in final_statistics.values() 
+                    for h in l.values() if h['is_dead'])
+    
+    print(f"Gradient 측정 완료")
+    print(f"   수집된 헤드: {collected}/{total_heads}개")
+    print(f"   Dead heads: {dead_heads}개 ({dead_heads/total_heads*100:.1f}%)")
+    
+    return final_statistics
 
 
-def calculate_head_importance(gradients):
+def calculate_head_importance(statistics):
     """
-    측정된 gradient로 중요도 계산
+    통계 정보로부터 중요도 계산 (다차원 평가)
     
     Args:
-        gradients: measure_head_gradient()의 출력
+        statistics: measure_head_gradient()의 출력
         
     Returns:
         head_scores: Dict[layer_idx][head_idx] = score
     """
     
-    print("Gradient 기반 중요도 계산 중...")
+    print("다차원 중요도 계산 중...")
     
     head_scores = {}
     
-    for layer_idx, layer_gradients in gradients.items():
+    for layer_idx, layer_stats in statistics.items():
         layer_head_scores = {}
         
-        for head_idx, head_gradient_list in layer_gradients.items():
-            if len(head_gradient_list) > 0:
-                # 평균 gradient 값을 중요도로 사용
-                importance = np.mean(head_gradient_list)
+        for head_idx, stats in layer_stats.items():
+            if stats['count'] > 0 and not stats['is_dead']:
+                # 다차원 중요도 계산
+                # 1. 평균 gradient (기본 중요도)
+                mean_importance = stats['mean']
+                
+                # 2. 안정성 고려 (낮은 std = 더 안정적)
+                stability_score = 1.0 / (1.0 + stats['std'])
+                
+                # 3. 최대값 고려 (중요한 순간 존재)
+                max_score = stats['max']
+                
+                # 종합 중요도 (가중 평균)
+                importance = (
+                    0.6 * mean_importance +  # 평균 gradient
+                    0.2 * stability_score +   # 안정성
+                    0.2 * max_score           # 최대값
+                )
                 
                 # 유효성 검증
                 if np.isnan(importance) or np.isinf(importance):
-                    layer_head_scores[head_idx] = 0.0
-                else:
-                    layer_head_scores[head_idx] = importance
+                    importance = 0.0
+                
+                layer_head_scores[head_idx] = float(importance)
             else:
                 layer_head_scores[head_idx] = 0.0
         
@@ -210,12 +280,24 @@ def calculate_head_importance(gradients):
     
     print(f"중요도 계산 완료: {total_heads}개 헤드 중 {valid_heads}개 유효")
     
+    # 레이어별 통계 출력
+    print("\n레이어별 중요도 분포:")
+    for layer_idx in sorted(head_scores.keys()):
+        scores = list(head_scores[layer_idx].values())
+        valid_scores = [s for s in scores if s > 0]
+        if valid_scores:
+            print(f"  Layer {layer_idx:2d}: "
+                  f"mean={np.mean(valid_scores):.6f}, "
+                  f"std={np.std(valid_scores):.6f}, "
+                  f"min={np.min(valid_scores):.6f}, "
+                  f"max={np.max(valid_scores):.6f}")
+    
     return head_scores
 
 
 def select_heads_to_prune(head_scores, ratio=None):
     """
-    중요도 낮은 N% 선택
+    중요도 낮은 N% 선택 (레이어별 분산 고려)
     
     Args:
         head_scores: calculate_head_importance()의 출력
@@ -228,7 +310,7 @@ def select_heads_to_prune(head_scores, ratio=None):
     if ratio is None:
         ratio = PRUNE_RATIO
     
-    print(f"중요도 정렬 및 하위 {ratio:.1%} 선택")
+    print(f"중요도 정렬 및 하위 {ratio:.1%} 선택 (레이어 분산 고려)")
     
     if not head_scores:
         print("유효한 헤드 점수가 없습니다!")
@@ -246,16 +328,16 @@ def select_heads_to_prune(head_scores, ratio=None):
                 zero_heads.append((0.0, layer_idx, head_idx))
     
     print(f"  유효한 헤드: {len(all_heads)}개")
-    print(f"  무효한 헤드: {len(zero_heads)}개")
+    print(f"  Dead heads: {len(zero_heads)}개")
     
     if len(all_heads) == 0:
         print("프루닝할 유효한 헤드가 없습니다!")
         return []
     
-    # 중요도 기준 오름차순 정렬 (낮은 중요도가 앞에)
+    # 중요도 기준 오름차순 정렬
     all_heads.sort(key=lambda x: x[0])
     
-    # 무효한 헤드를 먼저 프루닝하고 그 다음에 낮은 중요도 헤드
+    # Dead heads를 먼저 프루닝
     combined_heads = zero_heads + all_heads
     
     total_heads = len(combined_heads)
@@ -270,7 +352,7 @@ def select_heads_to_prune(head_scores, ratio=None):
         importance, layer_idx, head_idx = combined_heads[i]
         heads_to_prune.append((layer_idx, head_idx))
     
-    # 통계 출력
+    # 레이어별 통계
     pruned_by_layer = {}
     for layer_idx, head_idx in heads_to_prune:
         pruned_by_layer[layer_idx] = pruned_by_layer.get(layer_idx, 0) + 1
@@ -280,7 +362,15 @@ def select_heads_to_prune(head_scores, ratio=None):
         pruned = pruned_by_layer.get(layer_idx, 0)
         total_in_layer = len(head_scores[layer_idx])
         percentage = pruned / total_in_layer * 100 if total_in_layer > 0 else 0
-        print(f"  레이어 {layer_idx:2d}: {pruned:2d}/{total_in_layer} ({percentage:5.1f}%)")
+        
+        # 프루닝된 헤드의 평균 중요도
+        pruned_heads_in_layer = [head_idx for l, h in heads_to_prune if l == layer_idx]
+        if pruned_heads_in_layer:
+            avg_importance = np.mean([head_scores[layer_idx][h] for h in pruned_heads_in_layer])
+            print(f"  Layer {layer_idx:2d}: {pruned:2d}/{total_in_layer} ({percentage:5.1f}%) "
+                  f"- avg importance: {avg_importance:.6f}")
+        else:
+            print(f"  Layer {layer_idx:2d}: {pruned:2d}/{total_in_layer} ({percentage:5.1f}%)")
     
     return heads_to_prune
 
@@ -288,8 +378,8 @@ def select_heads_to_prune(head_scores, ratio=None):
 # 테스트 코드
 if __name__ == "__main__":
     print("=" * 60)
-    print("Attention Heads Gradient 중요도 분석")
-    print("   (원본 모델 직접 프루닝)")
+    print("Attention Heads Gradient 중요도 분석 v2")
+    print("   (통계 강화 + 메모리 최적화)")
     print("=" * 60)
     
     # 디버그 모드 설정
@@ -304,6 +394,8 @@ if __name__ == "__main__":
     print(f"  샘플 수: {'전체' if MAX_SAMPLES is None else MAX_SAMPLES}")
     print(f"  디바이스: {DEVICE}")
     print(f"  데이터 타입: {DTYPE}")
+    print(f"  통계 수집: {COLLECT_STATISTICS}")
+    print(f"  Gradient 임계값: {GRADIENT_THRESHOLD}")
     print()
     
     try:
@@ -321,11 +413,11 @@ if __name__ == "__main__":
         
         print(f"  샘플 수: {len(data_samples)}개")
         
-        # 3. Gradient 측정
-        gradients = measure_head_gradient(model, tokenizer, data_samples)
+        # 3. Gradient 측정 (통계 포함)
+        statistics = measure_head_gradient(model, tokenizer, data_samples)
         
-        # 4. 중요도 계산
-        scores = calculate_head_importance(gradients)
+        # 4. 중요도 계산 (다차원 평가)
+        scores = calculate_head_importance(statistics)
         
         if not scores:
             print("중요도 계산 실패!")
@@ -351,7 +443,7 @@ if __name__ == "__main__":
         save_json(result_data, OUTPUT_FILE)
         
         print("\n" + "=" * 60)
-        print("Attention heads gradient 분석 완료!")
+        print("Attention heads gradient 분석 완료! (v2)")
         print(f"원본 모델: {MODEL_PATH}")
         print(f"측정 데이터: {len(data_samples)}개 샘플")
         print(f"프루닝 비율: {PRUNE_RATIO:.1%}")
