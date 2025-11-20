@@ -9,7 +9,7 @@ from typing import Dict, List, Tuple, Optional
 import gc
 
 # 프로젝트 루트 경로 추가
-sys.path.append('/content/drive/MyDrive/smartfarm_pruning')
+sys.path.append('/content/drive/MyDrive/smartfarm_pruning/1번째')
 sys.path.append(str(Path(__file__).parent.parent.parent))
 
 from src.utils.model_loader import load_model
@@ -19,9 +19,28 @@ from transformers import AutoTokenizer
 
 # ========== Configuration ==========
 # 프루닝 강도 관련
-PRUNE_RATIO = 0.1
-MAX_PRUNE_PER_LAYER = 0.45
-MIN_NEURONS_PER_LAYER = 400
+PRUNE_RATIO = 0.30  # 가장 중요
+# 범위: 0.05 ~ 0.40
+# - 0.05 (5%): 매우 보수적, 성능 유지 우선
+# - 0.10 (10%): 안전한 선택
+# - 0.20 (20%): 균형잡힌 선택
+# - 0.30 (30%): 공격적, 크기 감소 우선
+# - 0.40 (40%): 매우 공격적, 파인튜닝 필수
+
+MAX_PRUNE_PER_LAYER = 0.45  # 레이어당 최대 제거 비율
+# 범위: 0.10 ~ 0.70
+# - 0.10: 매우 보수적, 레이어 기능 보존
+# - 0.30: 균형잡힌 선택
+# - 0.50: 현재 설정, 절반까지 허용
+# - 0.70: 공격적, 특정 레이어 크게 축소 가능
+
+MIN_NEURONS_PER_LAYER = 400  # 레이어당 최소 유지 뉴런
+# 범위: 50 ~ 2000
+# - 50: 극도로 작게 허용 (위험)
+# - 100: 최소한의 기능
+# - 400: 현재 설정
+# - 1000: 보수적
+# - 2000: 매우 보수적
 
 # 중요도 계산 가중치 (합이 1.0이 되도록 설정)
 IMPORTANCE_WEIGHTS = {
@@ -31,13 +50,26 @@ IMPORTANCE_WEIGHTS = {
 }
 
 # Data Processing
-BATCH_SIZE = 4
-MAX_SAMPLES = None
-MAX_LENGTH = 512
+BATCH_SIZE = 4  # GPU 메모리에 따라
+# - 1: 매우 적은 메모리 (T4 GPU)
+# - 4: 현재 설정 (균형)
+# - 8: 충분한 메모리 (A100)
+# - 16: 대용량 메모리
+
+MAX_SAMPLES = None  # 중요도 측정용 샘플 수
+# - 100: 빠른 테스트
+# - 400: 현재 데이터 전체
+# - 1000: 더 정확한 측정
+# - None: 모든 데이터 사용
+
+MAX_LENGTH = 512  # 토큰 길이
+# - 256: 짧은 문장, 빠른 처리
+# - 512: 현재 설정 (균형)
+# - 1024: 긴 문맥 고려
 
 # Gradient 측정 방식
-GRADIENT_THRESHOLD = 1e-6
-USE_SWIGLU = True
+GRADIENT_THRESHOLD = 1e-6  # Dead neuron 판단 임계값
+USE_SWIGLU = True  # SwiGLU 전체 측정 여부 (True 권장)
 
 # 레이어별 차별화
 LAYER_IMPORTANCE_SCALE = {
@@ -47,24 +79,27 @@ LAYER_IMPORTANCE_SCALE = {
 }
 
 # Paths
-MODEL_PATH = "models/original/gemma-3-1b-pt"
-DATA_PATH = "data/split/pruning_activation.json"
-OUTPUT_PATH = "results/gradient_neurons_to_prune.json"
-STATS_OUTPUT_PATH = "results/gradient_neuron_stats.json"
+MODEL_PATH = "models/original/gemma-3-4b-it"
+DATA_PATH = "data/tomato_dataset.json"
+
+# 프루닝 비율에 따른 동적 파일명 생성
+PRUNE_RATIO_INT = int(PRUNE_RATIO * 100)  # 0.25 -> 25
+OUTPUT_PATH = f"results/pruned/gradient/gradient_neurons_to_prune_{PRUNE_RATIO_INT}.json"
+STATS_OUTPUT_PATH = f"results/pruned/gradient/gradient_neuron_stats_{PRUNE_RATIO_INT}.json"
 
 # Technical Settings  
 DEVICE = 'cuda' if torch.cuda.is_available() else 'cpu'
-DTYPE = torch.float32
-ATTENTION_IMPLEMENTATION = "eager"
+DTYPE = torch.float32  # float16은 NaN 위험
+ATTENTION_IMPLEMENTATION = "eager"  # "eager" 또는 "sdpa"
 
 # Memory Management
-CLEAR_CACHE_EVERY = 10
-GC_COLLECT_EVERY = 10
+CLEAR_CACHE_EVERY = 10  # N 배치마다 GPU 캐시 정리
+GC_COLLECT_EVERY = 10   # N 배치마다 가비지 컬렉션
 
 # Debug Settings
-VERBOSE = True
-SAVE_INTERMEDIATE_STATS = True
-DEBUG_MODE = False
+VERBOSE = True  # 상세 출력 여부
+SAVE_INTERMEDIATE_STATS = True  # 중간 통계 저장 여부  
+DEBUG_MODE = False  # 디버그 모드 (소량 데이터로 테스트)
 
 # Debug mode overrides
 if DEBUG_MODE:
@@ -95,7 +130,18 @@ def measure_neuron_gradient(model, tokenizer, data_samples):
         if VERBOSE:
             print(f"Using {MAX_SAMPLES} samples (limited by MAX_SAMPLES)")
     
-    layers = model.model.layers
+    # Gemma 모델의 레이어 접근 (멀티모달 모델 지원)
+    if hasattr(model, 'language_model'):
+        # 멀티모달 모델 (Gemma3ForConditionalGeneration) - 4B 등
+        layers = model.language_model.layers
+        if VERBOSE:
+            print("Detected multimodal model (Gemma3ForConditionalGeneration)")
+    else:
+        # 텍스트 전용 모델 (Gemma3ForCausalLM) - 1B 등
+        layers = model.model.layers
+        if VERBOSE:
+            print("Detected text-only model (Gemma3ForCausalLM)")
+    
     num_layers = len(layers)
     
     # 레이어별 통계 초기화
