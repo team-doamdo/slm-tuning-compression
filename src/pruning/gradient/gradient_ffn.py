@@ -55,10 +55,22 @@ STATS_OUTPUT_PATH = "results/gradient_neuron_stats.json"
 # Technical Settings  
 DEVICE = 'cuda' if torch.cuda.is_available() else 'cpu'
 DTYPE = torch.float32
+ATTENTION_IMPLEMENTATION = "eager"
+
+# Memory Management
+CLEAR_CACHE_EVERY = 10
+GC_COLLECT_EVERY = 10
 
 # Debug Settings
 VERBOSE = True
 SAVE_INTERMEDIATE_STATS = True
+DEBUG_MODE = False
+
+# Debug mode overrides
+if DEBUG_MODE:
+    MAX_SAMPLES = 10
+    VERBOSE = True
+    print("DEBUG MODE: Using only 10 samples")
 # ====================================
 
 
@@ -77,6 +89,7 @@ def measure_neuron_gradient(model, tokenizer, data_samples):
     model.train()
     device = next(model.parameters()).device
     
+    # 샘플 수 제한
     if MAX_SAMPLES:
         data_samples = data_samples[:MAX_SAMPLES]
         if VERBOSE:
@@ -111,6 +124,7 @@ def measure_neuron_gradient(model, tokenizer, data_samples):
     hooks = []
     for layer_idx, layer in enumerate(layers):
         if USE_SWIGLU:
+            # gate와 up projection 모두 hook
             hook_gate = layer.mlp.gate_proj.register_full_backward_hook(
                 create_hook(layer_idx, 'gate')
             )
@@ -119,6 +133,7 @@ def measure_neuron_gradient(model, tokenizer, data_samples):
             )
             hooks.extend([hook_gate, hook_up])
         else:
+            # gate projection만 hook
             hook_gate = layer.mlp.gate_proj.register_full_backward_hook(
                 create_hook(layer_idx, 'gate')
             )
@@ -137,7 +152,7 @@ def measure_neuron_gradient(model, tokenizer, data_samples):
         batch_end = min((batch_idx + 1) * BATCH_SIZE, len(data_samples))
         batch_samples = data_samples[batch_start:batch_end]
         
-        # 텍스트 준비
+        # 텍스트 준비 (instruction + output)
         texts = []
         for sample in batch_samples:
             text = f"{sample['instruction']} {sample['output']}"
@@ -153,7 +168,7 @@ def measure_neuron_gradient(model, tokenizer, data_samples):
                 max_length=MAX_LENGTH
             ).to(device)
             
-            # labels 생성
+            # labels 생성 (output 부분만)
             labels = inputs["input_ids"].clone()
             
             # Forward pass
@@ -163,29 +178,32 @@ def measure_neuron_gradient(model, tokenizer, data_samples):
             outputs = model(**inputs, labels=labels)
             loss = outputs.loss
             
-            # Backward pass
+            # Backward pass로 gradient 계산
             loss.backward()
             
             # Gradient 통계 업데이트
             for layer_idx in range(num_layers):
                 if USE_SWIGLU:
+                    # SwiGLU gradient 계산
                     gate_key = f"{layer_idx}_gate"
                     up_key = f"{layer_idx}_up"
                     
                     if gate_key in captured_gradients and up_key in captured_gradients:
                         gate_grad = captured_gradients[gate_key]
                         up_grad = captured_gradients[up_key]
+                        # SwiGLU gradient: gate와 up의 combined gradient
                         gradient = (gate_grad.abs() + up_grad.abs()) / 2.0
                     else:
                         continue
                 else:
+                    # Gate projection gradient만 사용
                     gate_key = f"{layer_idx}_gate"
                     if gate_key in captured_gradients:
                         gradient = captured_gradients[gate_key].abs()
                     else:
                         continue
                 
-                # 통계 계산
+                # 통계 계산 (배치와 시퀀스 차원에 대한 평균)
                 neuron_grad = gradient.mean(dim=[0, 1])
                 neuron_max = gradient.max(dim=0)[0].max(dim=0)[0]
                 
@@ -200,6 +218,13 @@ def measure_neuron_gradient(model, tokenizer, data_samples):
             if VERBOSE:
                 print(f"Warning: Batch {batch_idx} processing error: {e}")
             continue
+        
+        # 메모리 정리
+        if batch_idx % CLEAR_CACHE_EVERY == 0:
+            if torch.cuda.is_available():
+                torch.cuda.empty_cache()
+        if batch_idx % GC_COLLECT_EVERY == 0:
+            gc.collect()
     
     # Hook 제거
     for hook in hooks:
@@ -254,10 +279,14 @@ def calculate_neuron_importance(neuron_statistics):
         mean_grad = np.array(stats['mean'])
         max_grad = np.array(stats['max'])
         std_grad = np.array(stats['std'])
+        zero_ratio = np.array(stats['zero_ratio'])
         
         # 각 요소 정규화
         mean_norm = mean_grad / (mean_grad.max() + 1e-8)
         max_norm = max_grad / (max_grad.max() + 1e-8)
+        
+        # Gradient variance를 중요도 지표로 사용
+        # 높은 variance = 다양한 상황에서 중요 = 높은 중요도
         variance_norm = std_grad / (std_grad.max() + 1e-8)
         
         # 가중치 기반 중요도 계산
@@ -275,6 +304,7 @@ def calculate_neuron_importance(neuron_statistics):
         else:
             layer_scale = LAYER_IMPORTANCE_SCALE['late']
         
+        # 스케일 적용 (높은 스케일 = 더 중요 = 프루닝 덜 됨)
         importance = importance * layer_scale
         
         neuron_scores[layer_key] = importance.tolist()
@@ -318,7 +348,7 @@ def select_neurons_to_prune(neuron_scores):
     # 중요도 정렬 (오름차순)
     all_neurons.sort(key=lambda x: x['score'])
     
-    # 프루닝 대상 선택 (레이어별 제약 조건 적용)
+    # 프루닝 대상 선택 (레이어별 최소 뉴런 수 고려)
     total_neurons = len(all_neurons)
     target_prune_count = int(total_neurons * PRUNE_RATIO)
     
@@ -337,7 +367,7 @@ def select_neurons_to_prune(neuron_scores):
         if remaining_after_prune < MIN_NEURONS_PER_LAYER:
             continue
             
-        # 2. 최대 프루닝 비율 확인
+        # 2. 최대 프루닝 비율 확인 
         max_prunable_in_layer = int(current_layer_neurons * MAX_PRUNE_PER_LAYER)
         if pruned_in_layer >= max_prunable_in_layer:
             continue
@@ -371,7 +401,7 @@ def select_neurons_to_prune(neuron_scores):
 
 
 def save_statistics(neuron_statistics, neuron_scores, output_path):
-    """중간 통계 저장"""
+    """중간 통계 저장 (선택적)"""
     if not SAVE_INTERMEDIATE_STATS:
         return
     
@@ -448,6 +478,12 @@ def main():
     print(f"\n[3/5] Measuring neuron gradients...")
     neuron_statistics = measure_neuron_gradient(model, tokenizer, data_samples)
     
+    # 메모리 정리
+    del model
+    if torch.cuda.is_available():
+        torch.cuda.empty_cache()
+    gc.collect()
+    
     # 4. 중요도 계산
     print(f"\n[4/5] Calculating importance scores...")
     neuron_scores = calculate_neuron_importance(neuron_statistics)
@@ -460,7 +496,7 @@ def main():
     save_json(neurons_to_prune, OUTPUT_PATH)
     print(f"Results saved to {OUTPUT_PATH}")
     
-    # 통계 저장
+    # 선택적: 통계 저장
     if SAVE_INTERMEDIATE_STATS:
         save_statistics(neuron_statistics, neuron_scores, STATS_OUTPUT_PATH)
     
