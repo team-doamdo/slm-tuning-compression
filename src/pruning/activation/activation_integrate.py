@@ -5,10 +5,56 @@ from pathlib import Path
 import sys
 
 # 프로젝트 루트 경로 
+sys.path.append('/content/drive/MyDrive/smartfarm_pruning/1번째')
 sys.path.append(str(Path(__file__).parent.parent.parent))
 
 from src.utils.data_loader import load_json, save_json
 from src.utils.model_loader import load_model, save_pruned_model
+
+
+# ========== Configuration ==========
+# 프루닝 비율 설정 (이 값만 수정하면 파일명이 자동으로 변경됨)
+PRUNE_RATIO = 0.30  # 5%
+
+# 프루닝 비율에 따른 동적 경로 생성
+PRUNE_RATIO_INT = int(PRUNE_RATIO * 100)  # 0.05 -> 5
+
+# Paths
+MODEL_PATH = "models/original/gemma-3-4b-it"
+HEADS_PATH = f"results/activation_heads_to_prune.json"
+NEURONS_PATH = f"results/pruned/activation/activation_neurons_to_prune_{PRUNE_RATIO_INT}.json"
+OUTPUT_PATH = f"models/pruned/activation/pruned_activation_{PRUNE_RATIO_INT}"
+
+# FFN 프루닝 파라미터 (activation_ffn.py와 동일하게 유지)
+MIN_INTERMEDIATE = 400
+EDGE_LAYERS_PROTECT = 2
+EDGE_RATIO_SCALE = 0.5
+MAX_LAYER_PRUNE_RATIO = 0.45
+# ====================================
+
+
+def get_model_layers(model):
+    """모델 구조에 따라 layers 접근 (멀티모달/텍스트 전용 모델 지원)"""
+    if hasattr(model, 'language_model'):
+        # 멀티모달 모델 (Gemma3ForConditionalGeneration) - 4B 등
+        return model.language_model.layers
+    else:
+        # 텍스트 전용 모델 (Gemma3ForCausalLM) - 1B 등
+        return model.model.layers
+
+
+def get_head_dim(model):
+    """모델에서 head_dim 가져오기"""
+    if hasattr(model.config, 'head_dim'):
+        return model.config.head_dim
+    elif hasattr(model.config, 'text_config') and hasattr(model.config.text_config, 'head_dim'):
+        return model.config.text_config.head_dim
+    else:
+        if hasattr(model.config, 'text_config'):
+            config = model.config.text_config
+        else:
+            config = model.config
+        return config.hidden_size // config.num_attention_heads
 
 
 def load_pruning_targets(heads_path, neurons_path):
@@ -22,6 +68,7 @@ def load_pruning_targets(heads_path, neurons_path):
     print(f"  FFN neurons to prune: {len(neurons_to_prune)}")
     
     return heads_to_prune, neurons_to_prune
+
 
 def _normalize_heads_to_prune(heads_to_prune_raw, num_layers: int):
     """
@@ -77,22 +124,19 @@ def _normalize_heads_to_prune(heads_to_prune_raw, num_layers: int):
     # 인식 불가 포맷 => 빈 dict
     return norm
 
+
 def prune_attention_heads(model, heads_to_prune, verbose: bool = True):
     """
-    IN : (model, heads_to_prune)  # heads_to_prune는 다양한 포맷 허용
-    OUT: (model, heads_by_layer, heads_remaining)
-
-    변경점(중요):
-    - '원래 GQA 그룹 크기(g)'를 유지하려는 제약을 제거.
-    - 입력으로 받은 '개별 head 인덱스' 기준으로 Q만 슬라이스한다.
-    - KV는 kvh≥1이면 그대로 유지(여기서는 1). 새 qh에 맞춰 num_key_value_groups를 재산출한다.
-    - 불변식: qh >= 1, kvh >= 1, qh % kvh == 0, o_in == q_out
+    Attention heads 프루닝 (4B 멀티모달 모델 지원)
     """
-    assert hasattr(model, "config") and hasattr(model.config, "head_dim"), "model.config.head_dim 필요"
-    head_dim = model.config.head_dim
-    num_layers = len(model.model.layers)
+    # head_dim 가져오기 (멀티모달 모델 지원)
+    head_dim = get_head_dim(model)
+    
+    # 모델 구조에 따라 layers 접근
+    layers = get_model_layers(model)
+    num_layers = len(layers)
 
-    # 1) 입력 포맷 정규화(딕셔너리: layer -> [head_idx,...])
+    # 입력 포맷 정규화
     heads_norm = _normalize_heads_to_prune(heads_to_prune, num_layers)
 
     heads_by_layer = {}
@@ -100,12 +144,12 @@ def prune_attention_heads(model, heads_to_prune, verbose: bool = True):
         print(f"[prune_attention_heads] start - layers={num_layers}, head_dim={head_dim}")
 
     for layer_idx in range(num_layers):
-        attn = model.model.layers[layer_idx].self_attn
+        attn = layers[layer_idx].self_attn
 
-        q_w = attn.q_proj.weight.data    # [Q_out, hidden]
-        k_w = attn.k_proj.weight.data    # [K_out, hidden]
-        v_w = attn.v_proj.weight.data    # [V_out, hidden]
-        o_w = attn.o_proj.weight.data    # [hidden, Q_out]
+        q_w = attn.q_proj.weight.data
+        k_w = attn.k_proj.weight.data
+        v_w = attn.v_proj.weight.data
+        o_w = attn.o_proj.weight.data
 
         # 현재 헤드 수
         orig_q_heads = q_w.shape[0] // head_dim
@@ -119,25 +163,22 @@ def prune_attention_heads(model, heads_to_prune, verbose: bool = True):
         if verbose:
             print(f"  - layer {layer_idx}: before Q={orig_q_heads}, KV={orig_kv_heads}")
 
-        # 제거 대상(head 인덱스)
+        # 제거 대상
         remove_set = set(int(h) for h in heads_norm.get(layer_idx, []))
-        # 남길 Q-head 인덱스(그냥 개별 헤드 단위로)
         keep_heads = [h for h in range(orig_q_heads) if h not in remove_set]
 
-        # 최소 1개는 남겨야 함
         if len(keep_heads) == 0:
-            keep_heads = [0]  
+            keep_heads = [0]
             if verbose:
                 print(f"      no heads left; keep head {keep_heads}")
 
         # 새 qh / kvh / groups 계산
         new_q = len(keep_heads)
-        new_kv = orig_kv_heads  # KV는 그대로 유지 (여기서는 1)
-        assert new_q >= 1 and new_kv >= 1, f"[L{layer_idx}] invalid heads after prune (qh={new_q}, kvh={new_kv})"
-        assert new_q % new_kv == 0, f"[L{layer_idx}] GQA mismatch after prune (qh={new_q}, kvh={new_kv})"
+        new_kv = orig_kv_heads
+        assert new_q >= 1 and new_kv >= 1, f"[L{layer_idx}] invalid heads after prune"
+        assert new_q % new_kv == 0, f"[L{layer_idx}] GQA mismatch after prune"
 
-        # --- 인덱스 생성 ---
-        # Q (행 방향 슬라이스)
+        # Q 인덱스 생성
         keep_q_idx = []
         for h in keep_heads:
             s = h * head_dim
@@ -145,53 +186,39 @@ def prune_attention_heads(model, heads_to_prune, verbose: bool = True):
             keep_q_idx.extend(range(s, e))
         keep_q_idx = torch.tensor(keep_q_idx, device=q_w.device, dtype=torch.long)
 
-        # K/V (KV는 유지) → 인덱스 전체
-        keep_k_idx = torch.arange(k_w.shape[0], device=k_w.device, dtype=torch.long)
-        # 필요시 KV도 줄이고 싶다면 여기서 선택적으로 슬라이스하되 new_q % new_kv == 0 유지해야 함.
-
-        # --- 가중치/바이어스 슬라이싱 ---
-        # Q
+        # 가중치 슬라이싱
         new_q_w = torch.index_select(q_w, 0, keep_q_idx).clone()
         attn.q_proj.weight = torch.nn.Parameter(new_q_w)
         if attn.q_proj.bias is not None:
             new_q_b = torch.index_select(attn.q_proj.bias.data, 0, keep_q_idx).clone()
             attn.q_proj.bias = torch.nn.Parameter(new_q_b)
 
-        # K (그대로)
         attn.k_proj.weight = torch.nn.Parameter(k_w.clone())
         if attn.k_proj.bias is not None:
             attn.k_proj.bias = torch.nn.Parameter(attn.k_proj.bias.data.clone())
 
-        # V (그대로)
         attn.v_proj.weight = torch.nn.Parameter(v_w.clone())
         if attn.v_proj.bias is not None:
             attn.v_proj.bias = torch.nn.Parameter(attn.v_proj.bias.data.clone())
 
-        # O (열 방향 = Q concat 축)
         new_o_w = torch.index_select(o_w, 1, keep_q_idx).clone()
         attn.o_proj.weight = torch.nn.Parameter(new_o_w)
 
-        # --- 모듈 메타데이터 동기화 ---
+        # 메타데이터 동기화
         attn.q_proj.out_features = attn.q_proj.weight.shape[0]
         attn.k_proj.out_features = attn.k_proj.weight.shape[0]
         attn.v_proj.out_features = attn.v_proj.weight.shape[0]
-        attn.q_proj.in_features  = attn.q_proj.weight.shape[1]
-        attn.k_proj.in_features  = attn.k_proj.weight.shape[1]
-        attn.v_proj.in_features  = attn.v_proj.weight.shape[1]
-        attn.o_proj.in_features  = attn.o_proj.weight.shape[1]
+        attn.q_proj.in_features = attn.q_proj.weight.shape[1]
+        attn.k_proj.in_features = attn.k_proj.weight.shape[1]
+        attn.v_proj.in_features = attn.v_proj.weight.shape[1]
+        attn.o_proj.in_features = attn.o_proj.weight.shape[1]
 
-        # 새 헤드 수 세팅 (hidden_size/head_dim은 불변)
         new_q_heads = attn.q_proj.weight.shape[0] // head_dim
-        new_kv_heads = attn.k_proj.weight.shape[0] // head_dim  
+        new_kv_heads = attn.k_proj.weight.shape[0] // head_dim
         attn.num_heads = int(new_q_heads)
         attn.num_key_value_heads = int(new_kv_heads)
         attn.num_key_value_groups = int(new_q_heads // new_kv_heads)
         attn.head_dim = head_dim
-
-        # 불변식 확인
-        assert new_q_heads >= 1 and new_kv_heads >= 1
-        assert new_q_heads % new_kv_heads == 0
-        assert attn.o_proj.weight.shape[1] == attn.q_proj.weight.shape[0]
 
         if verbose:
             print(f"      keep Q-heads: {keep_heads}")
@@ -201,19 +228,18 @@ def prune_attention_heads(model, heads_to_prune, verbose: bool = True):
                   f"(= {attn.num_key_value_heads}×{head_dim}), "
                   f"groups={attn.num_key_value_groups}")
 
-        # 리포트(남은 Q-head 인덱스)
         heads_by_layer[layer_idx] = keep_heads
 
     # 레이어별 남은 헤드 수 리포트
     heads_remaining = {}
     for layer_idx in range(num_layers):
-        attn = model.model.layers[layer_idx].self_attn
+        attn = layers[layer_idx].self_attn
         qh = attn.q_proj.weight.shape[0] // head_dim
         kvh = attn.k_proj.weight.shape[0] // head_dim
         heads_remaining[layer_idx] = {"num_q_heads": int(qh), "num_kv_heads": int(kvh)}
 
-    # 최종 무결성
-    for i, layer in enumerate(model.model.layers):
+    # 최종 무결성 검사
+    for i, layer in enumerate(layers):
         attn = layer.self_attn
         q_w = attn.q_proj.weight
         k_w = attn.k_proj.weight
@@ -229,34 +255,31 @@ def prune_attention_heads(model, heads_to_prune, verbose: bool = True):
     return model, heads_by_layer, heads_remaining
 
 
-def prune_ffn_neurons(
-    model,
-    neurons_to_prune,
-    *,
-    min_intermediate: int = 400,
-    edge_layers_protect: int = 2,    # 앞/뒤 N개 레이어 보호
-    edge_ratio_scale: float = 0.5,   # 보호 레이어는 제거비율 절반
-    max_layer_prune_ratio: float = 0.45,  # 레이어별 최대 제거율 3%
-    verbose: bool = True
-):
+def prune_ffn_neurons(model, neurons_to_prune, verbose: bool = True):
+    """
+    FFN neurons 프루닝 (4B 멀티모달 모델 지원)
+    """
     if verbose:
-        print("\n Pruning FFN neurons...")
+        print("\nPruning FFN neurons...")
 
     raw_by_layer = {}
     for item in neurons_to_prune:
-        li = int(item["layer"]); ni = int(item["neuron"])
+        li = int(item["layer"])
+        ni = int(item["neuron"])
         raw_by_layer.setdefault(li, set()).add(ni)
 
-    num_layers = len(model.model.layers)
+    # 모델 구조에 따라 layers 접근
+    layers = get_model_layers(model)
+    num_layers = len(layers)
     neurons_by_layer = {}
 
     if verbose:
         print(f"  Pruning neurons in {len(raw_by_layer)} layers")
 
     for layer_idx in sorted(raw_by_layer.keys()):
-        mlp = model.model.layers[layer_idx].mlp
+        mlp = layers[layer_idx].mlp
         gate_w = mlp.gate_proj.weight.data
-        up_w   = mlp.up_proj.weight.data
+        up_w = mlp.up_proj.weight.data
         down_w = mlp.down_proj.weight.data
 
         inter = gate_w.shape[0]
@@ -266,26 +289,26 @@ def prune_ffn_neurons(
         remove_sorted = sorted(raw_by_layer[layer_idx])
 
         # 엣지 레이어 보호
-        if (layer_idx < edge_layers_protect) or (layer_idx >= num_layers - edge_layers_protect):
-            target_remove = int(round(len(remove_sorted) * edge_ratio_scale))
+        if (layer_idx < EDGE_LAYERS_PROTECT) or (layer_idx >= num_layers - EDGE_LAYERS_PROTECT):
+            target_remove = int(round(len(remove_sorted) * EDGE_RATIO_SCALE))
             remove_sorted = remove_sorted[:target_remove]
             if verbose and len(raw_by_layer[layer_idx]) != len(remove_sorted):
                 print(f"    [edge-protect] L{layer_idx}: remove {len(raw_by_layer[layer_idx])} → {len(remove_sorted)}")
 
         # 레이어별 최대 제거율 제한
-        cap = int(inter * max_layer_prune_ratio)
+        cap = int(inter * MAX_LAYER_PRUNE_RATIO)
         if len(remove_sorted) > cap:
             if verbose:
-                print(f"    [cap] L{layer_idx}: remove {len(remove_sorted)} → {cap} (cap {max_layer_prune_ratio*100:.1f}%)")
+                print(f"    [cap] L{layer_idx}: remove {len(remove_sorted)} → {cap} (cap {MAX_LAYER_PRUNE_RATIO*100:.1f}%)")
             remove_sorted = remove_sorted[:cap]
 
         remove_set = set(remove_sorted)
         keep = [i for i in range(inter) if i not in remove_set]
 
-        if len(keep) < min_intermediate:
+        if len(keep) < MIN_INTERMEDIATE:
             if verbose:
-                print(f"    Layer {layer_idx}: keep {len(keep)} < {min_intermediate}, adjusting…")
-            keep = list(range(min(inter, max(min_intermediate, len(keep)))))
+                print(f"    Layer {layer_idx}: keep {len(keep)} < {MIN_INTERMEDIATE}, adjusting…")
+            keep = list(range(min(inter, max(MIN_INTERMEDIATE, len(keep)))))
 
         if len(keep) == inter:
             neurons_by_layer[layer_idx] = []
@@ -297,12 +320,11 @@ def prune_ffn_neurons(
 
         # 슬라이싱
         new_gate_w = torch.index_select(gate_w, 0, keep_t).clone()
-        new_up_w   = torch.index_select(up_w,   0, keep_t).clone()
+        new_up_w = torch.index_select(up_w, 0, keep_t).clone()
         new_down_w = torch.index_select(down_w, 1, keep_t).clone()
 
-        # 스케일 보정 없음 (과상승 방지)
         mlp.gate_proj.weight = torch.nn.Parameter(new_gate_w)
-        mlp.up_proj.weight   = torch.nn.Parameter(new_up_w)
+        mlp.up_proj.weight = torch.nn.Parameter(new_up_w)
         mlp.down_proj.weight = torch.nn.Parameter(new_down_w)
 
         # bias 슬라이스
@@ -315,10 +337,10 @@ def prune_ffn_neurons(
                 torch.index_select(mlp.up_proj.bias.data, 0, keep_t).clone()
             )
 
-        # 메타
+        # 메타데이터
         mlp.gate_proj.out_features = mlp.gate_proj.weight.shape[0]
-        mlp.up_proj.out_features   = mlp.up_proj.weight.shape[0]
-        mlp.down_proj.in_features  = mlp.down_proj.weight.shape[1]
+        mlp.up_proj.out_features = mlp.up_proj.weight.shape[0]
+        mlp.down_proj.in_features = mlp.down_proj.weight.shape[1]
         if hasattr(mlp, "intermediate_size"):
             mlp.intermediate_size = mlp.gate_proj.weight.shape[0]
 
@@ -333,73 +355,66 @@ def prune_ffn_neurons(
         print("  FFN neurons pruning completed")
     return model, neurons_by_layer
 
+
 def update_config_for_pruned_model(model):
-    """
-    프루닝된 모델의 config를 실제 크기로 업데이트
+    """프루닝된 모델의 config를 실제 크기로 업데이트"""
+    print("\nConfig 업데이트 중...")
     
-    주의: 레이어마다 크기가 다르므로, config의 기본값은 의미가 없어짐
-    하지만 model.save_pretrained()가 config를 저장하므로 업데이트 필요
-    """
-    print("\n Config 업데이트 중...")
+    layers = get_model_layers(model)
     
-    # 각 레이어의 실제 크기 계산
+    # 멀티모달 모델 지원: text_config 확인
+    if hasattr(model.config, 'text_config'):
+        config = model.config.text_config
+    else:
+        config = model.config
+    
+    # head_dim 계산
+    head_dim = get_head_dim(model)
+    
     layer_sizes = []
-    for layer in model.model.layers:
+    for layer in layers:
         layer_sizes.append({
-            'q_heads': layer.self_attn.q_proj.weight.shape[0] // (model.config.hidden_size // model.config.num_attention_heads),
+            'q_heads': layer.self_attn.q_proj.weight.shape[0] // head_dim,
             'intermediate_size': layer.mlp.gate_proj.weight.shape[0]
         })
     
-    # config는 단일 값만 가질 수 있으므로, 평균값이나 최소값으로 설정
     avg_intermediate = sum(l['intermediate_size'] for l in layer_sizes) // len(layer_sizes)
     
-    model.config.intermediate_size = avg_intermediate
+    # config 업데이트 (멀티모달은 text_config에)
+    if hasattr(model.config, 'text_config'):
+        model.config.text_config.intermediate_size = avg_intermediate
+    else:
+        model.config.intermediate_size = avg_intermediate
     
     print(f"  Config updated: intermediate_size = {avg_intermediate} (평균값)")
-    print(f"  ℹ실제 로드 시에는 pruned_structure.json의 레이어별 크기 사용")
 
-def _check_attention_invariants(model, verbose: bool = True):
-    """프루닝 후 GQA/차원 무결성 빠른 검사."""
-    hd = model.config.head_dim
-    for i, layer in enumerate(model.model.layers):
-        attn = layer.self_attn
-        q_w = attn.q_proj.weight
-        k_w = attn.k_proj.weight
-        o_w = attn.o_proj.weight
-
-        assert q_w.shape[0] % hd == 0, f"[L{i}] q_out % head_dim != 0"
-        assert k_w.shape[0] % hd == 0, f"[L{i}] k_out % head_dim != 0"
-
-        qh = q_w.shape[0] // hd
-        kvh = k_w.shape[0] // hd
-        assert qh >= 1 and kvh >= 1, f"[L{i}] invalid heads qh={qh}, kvh={kvh}"
-        assert qh % kvh == 0, f"[L{i}] GQA mismatch: qh={qh}, kvh={kvh} (qh % kvh != 0)"
-        assert o_w.shape[1] == q_w.shape[0], f"[L{i}] o_in({o_w.shape[1]}) != q_out({q_w.shape[0]})"
-
-        if verbose and i == 0:
-            print(f"[invariants] pass (showing first layer): qh={qh}, kvh={kvh}, head_dim={hd}")
 
 if __name__ == "__main__":
     print("=" * 60)
     print("Activation-based Pruning Integration")
     print("=" * 60)
-    
-    # 경로 설정
-    model_path = "models/original/gemma-3-4b-it"
-    heads_path = "results/activation_heads_to_prune_it.json"
-    neurons_path = "results/activation_neurons_to_prune_it.json"
-    output_path = "models/pruned_activation_it"
+    print(f"Configuration:")
+    print(f"  Prune ratio: {PRUNE_RATIO:.0%}")
+    print(f"  Model: {MODEL_PATH}")
+    print(f"  Output: {OUTPUT_PATH}")
+    print("=" * 60)
     
     # [1/5] 프루닝 대상 로드
     print("\n[1/5] Loading pruning targets...")
-    heads_to_prune, neurons_to_prune = load_pruning_targets(heads_path, neurons_path)
+    heads_to_prune, neurons_to_prune = load_pruning_targets(HEADS_PATH, NEURONS_PATH)
     
     # [2/5] 모델 로드
-    print(f"\n[2/5] Loading model from {model_path}...")
+    print(f"\n[2/5] Loading model from {MODEL_PATH}...")
     print("  Using float32 for numerical stability")
     print("  Using eager attention implementation")
     
-    model, tokenizer = load_model(model_path, dtype=torch.float32)
+    model, tokenizer = load_model(MODEL_PATH, dtype=torch.float32)
+    
+    # 모델 타입 확인
+    if hasattr(model, 'language_model'):
+        print("  Detected multimodal model (Gemma3ForConditionalGeneration)")
+    else:
+        print("  Detected text-only model (Gemma3ForCausalLM)")
     
     print(f"  Model loaded successfully")
     print(f"  Total parameters: {sum(p.numel() for p in model.parameters()):,}")
@@ -412,16 +427,23 @@ if __name__ == "__main__":
     print("\n[4/5] Pruning FFN neurons...")
     model, neurons_by_layer = prune_ffn_neurons(model, neurons_to_prune)
     
+    # Config 업데이트 (중요!)
+    update_config_for_pruned_model(model)
+    
     # [5/5] 모델 저장
     print("\n[5/5] Saving pruned model...")
+    
+    # 출력 디렉토리 생성
+    os.makedirs(OUTPUT_PATH, exist_ok=True)
     
     save_pruned_model(
         model, 
         tokenizer, 
-        output_path,
-        model_path, 
+        OUTPUT_PATH,
+        MODEL_PATH, 
         pruning_metadata={
             'method': 'activation',
+            'prune_ratio': PRUNE_RATIO,
             'heads': heads_by_layer,
             'neurons': neurons_by_layer,
             'heads_remaining': heads_remaining,
@@ -431,7 +453,7 @@ if __name__ == "__main__":
     print("\n" + "=" * 60)
     print("Activation-based Pruning Integration completed!")
     print("=" * 60)
-    print(f"\nOutput: {output_path}/")
+    print(f"\nOutput: {OUTPUT_PATH}/")
     print(f"  - model.safetensors (pruned model)")
     print(f"  - config.json (model config)")
     print(f"  - pruning_metadata.json (pruning info)")

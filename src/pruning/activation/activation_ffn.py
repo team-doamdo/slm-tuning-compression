@@ -9,6 +9,7 @@ from typing import Dict, List, Tuple, Optional
 import gc
 
 # 프로젝트 루트 경로 추가
+sys.path.append('/content/drive/MyDrive/smartfarm_pruning/1번째')
 sys.path.append(str(Path(__file__).parent.parent.parent))
 
 from src.utils.model_loader import load_model
@@ -18,7 +19,7 @@ from transformers import AutoTokenizer
 
 # ========== Configuration ==========
 # 프루닝 강도 관련
-PRUNE_RATIO = 0.25  # 가장 중요
+PRUNE_RATIO = 0.30  # 가장 중요
 # 범위: 0.05 ~ 0.40
 # - 0.05 (5%): 매우 보수적, 성능 유지 우선
 # - 0.10 (10%): 안전한 선택
@@ -84,9 +85,12 @@ LAYER_IMPORTANCE_SCALE = {
 
 # Paths
 MODEL_PATH = "models/original/gemma-3-4b-it"
-DATA_PATH = "data/split/pruning_activation.json"
-OUTPUT_PATH = "results/activation_neurons_to_prune_it.json"
-STATS_OUTPUT_PATH = "results/activation_neuron_stats.json"  # 선택적 통계 저장
+DATA_PATH = "data/tomato_dataset.json"
+
+# 프루닝 비율에 따른 동적 파일명 생성
+PRUNE_RATIO_INT = int(PRUNE_RATIO * 100)  # 0.25 -> 25
+OUTPUT_PATH = f"results/pruned/activation/activation_neurons_to_prune_{PRUNE_RATIO_INT}.json"
+STATS_OUTPUT_PATH = f"results/pruned/activation/activation_neuron_stats_{PRUNE_RATIO_INT}.json"
 
 # Technical Settings  
 DEVICE = 'cuda' if torch.cuda.is_available() else 'cpu'
@@ -131,7 +135,18 @@ def measure_neuron_activation(model, tokenizer, data_samples):
         if VERBOSE:
             print(f"Using {MAX_SAMPLES} samples (limited by MAX_SAMPLES)")
     
-    layers = model.model.layers
+    # Gemma 모델의 레이어 접근 (멀티모달 모델 지원)
+    if hasattr(model, 'language_model'):
+        # 멀티모달 모델 (Gemma3ForConditionalGeneration) - 4B 등
+        layers = model.language_model.layers
+        if VERBOSE:
+            print("Detected multimodal model (Gemma3ForConditionalGeneration)")
+    else:
+        # 텍스트 전용 모델 (Gemma3ForCausalLM) - 1B 등
+        layers = model.model.layers
+        if VERBOSE:
+            print("Detected text-only model (Gemma3ForCausalLM)")
+    
     num_layers = len(layers)
     
     # 레이어별 통계 초기화
