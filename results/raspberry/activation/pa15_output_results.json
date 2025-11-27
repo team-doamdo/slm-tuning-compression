@@ -1,0 +1,62 @@
+[
+    {
+        "id": 1,
+        "question": "Why are my tomatoes not developing good growth? Answer in short.",
+        "answer": "There are many reasons! It could be anything from lack of sunlight, poor soil, nutrient deficiencies, or pests. \n\nTo give you a more specific answer, could you tell me a little more about your tomato plants?",
+        "inference_time_sec": 73.239
+    },
+    {
+        "id": 2,
+        "question": "What temperature is good for tomatoes in the ripening stage? Answer in short.",
+        "answer": "Around 70-75°F (21-24°C) is ideal.",
+        "inference_time_sec": 11.9731
+    },
+    {
+        "id": 3,
+        "question": "Leaves green but wilting; leaves roll and drop; fruits may develop blossom-end rot symptoms. Answer in short.",
+        "answer": "Water stress.",
+        "inference_time_sec": 6.426
+    },
+    {
+        "id": 4,
+        "question": "What's the prevention using cover crops? Answer in short.",
+        "answer": "It protects the soil from temperature fluctuations.",
+        "inference_time_sec": 6.7566
+    },
+    {
+        "id": 5,
+        "question": "One-sided yellowing and wilting of leaves; older leaves become necrotic; smaller fruits. Answer in short.",
+        "answer": "Nutrient deficiency",
+        "inference_time_sec": 6.3588
+    },
+    {
+        "id": 6,
+        "question": "What conditions help tomatoes grow well during the flowering stage? Answer in short.",
+        "answer": "Warm temperatures (70-85°F), consistent moisture, and plenty of sunlight.",
+        "inference_time_sec": 11.5138
+    },
+    {
+        "id": 7,
+        "question": "Why are my tomatoes experiencing leaf curling during the fruit development stage? Answer in short.",
+        "answer": "Aphids (tiny green insects) are the most likely cause. \n\nDo you want more detail?",
+        "inference_time_sec": 12.6328
+    },
+    {
+        "id": 8,
+        "question": "What temperature is good for tomatoes in the fruit set stage? Answer in short.",
+        "answer": "Around 70-80°F (21-27°C) is ideal.",
+        "inference_time_sec": 12.8259
+    },
+    {
+        "id": 9,
+        "question": "Small necrotic spots on upper leaf surfaces and raised white spots on leaves; raised dark-centered white spots on green fruit. Answer in short.",
+        "answer": "Nutrient deficiency.",
+        "inference_time_sec": 7.8228
+    },
+    {
+        "id": 10,
+        "question": "Unilateral wilting of plants with light colored streaks on leaf midrib, petiole, and stem. Answer in short.",
+        "answer": "Anthocyanin deposition.",
+        "inference_time_sec": 7.8426
+    }
+]

@@ -1,0 +1,62 @@
+[
+    {
+        "id": 1,
+        "question": "Why are my tomatoes not developing good growth? Answer in short.",
+        "answer": "Here's a breakdown of common reasons and quick fixes:\n\n*   **Sunlight:** Tomatoes need at least 6-8 hours of direct sunlight daily.\n*   **Water:** Consistent watering, deeply and regularly, is crucial.\n*   **Nutrients:**  They need fertilizer (tomato food).\n*   **Soil:** Poor soil can limit growth. Amend with compost.\n*   **Temperature:** Too hot or too cold can hinder growth.\n*   **Pests/Disease:** Inspect for issues and treat promptly.\n\nTo help me give you more specific advice, could you tell me:\n\n*   What kind of tomatoes are you growing (determinate, indeterminate)?\n*   What's your climate like?\n*   Can you describe the leaves (yellowing, curling, etc.)?",
+        "inference_time_sec": 65.6927
+    },
+    {
+        "id": 2,
+        "question": "What temperature is good for tomatoes in the ripening stage? Answer in short.",
+        "answer": "65-75°F (18-24°C)",
+        "inference_time_sec": 9.9116
+    },
+    {
+        "id": 3,
+        "question": "Leaves green but wilting; leaves roll and drop; fruits may develop blossom-end rot symptoms. Answer in short.",
+        "answer": "Disease.",
+        "inference_time_sec": 5.8363
+    },
+    {
+        "id": 4,
+        "question": "What's the prevention using cover crops? Answer in short.",
+        "answer": "Cover crops help prevent soil erosion, improve soil health, and suppress weeds.",
+        "inference_time_sec": 9.5671
+    },
+    {
+        "id": 5,
+        "question": "One-sided yellowing and wilting of leaves; older leaves become necrotic; smaller fruits. Answer in short.",
+        "answer": "Nutrient deficiency (likely manganese or iron).",
+        "inference_time_sec": 8.6929
+    },
+    {
+        "id": 6,
+        "question": "What conditions help tomatoes grow well during the flowering stage? Answer in short.",
+        "answer": "Warm temperatures, consistent moisture, and adequate pollination are key.",
+        "inference_time_sec": 8.9004
+    },
+    {
+        "id": 7,
+        "question": "Why are my tomatoes experiencing leaf curling during the fruit development stage? Answer in short.",
+        "answer": "Leaf curling in tomatoes during fruit development is often due to **heat stress** or **water stress**. \n\nEssentially, the plant is trying to reduce surface area to conserve water/cool down.",
+        "inference_time_sec": 20.2513
+    },
+    {
+        "id": 8,
+        "question": "What temperature is good for tomatoes in the fruit set stage? Answer in short.",
+        "answer": "65-85°F (18-29°C)",
+        "inference_time_sec": 10.7749
+    },
+    {
+        "id": 9,
+        "question": "Small necrotic spots on upper leaf surfaces and raised white spots on leaves; raised dark-centered white spots on green fruit. Answer in short.",
+        "answer": "Likely Peach Leaf Curl.",
+        "inference_time_sec": 8.4721
+    },
+    {
+        "id": 10,
+        "question": "Unilateral wilting of plants with light colored streaks on leaf midrib, petiole, and stem. Answer in short.",
+        "answer": "This sounds like **Verticillium wilt**.\n\nHere's why:\n\n*   **Unilateral wilting:**  The symptom is localized to one side of the plant.\n*   **Light colored streaks:** This is a hallmark of *Verticillium* infections – the vascular system becomes blocked, causing a discoloration.\n*   **Leaf midrib, petiole, and stem:** The fungus attacks the vascular tissue, causing damage in these areas.\n\n**Important Note:** While *Verticillium wilt* is the most likely cause, other fungal diseases can also cause similar symptoms.  A plant pathologist would need to confirm the diagnosis.\n\n**Disclaimer:** *I am an AI Chatbot and not a plant pathologist. This information is for general knowledge and should not be considered as a definitive diagnosis.*",
+        "inference_time_sec": 73.7871
+    }
+]

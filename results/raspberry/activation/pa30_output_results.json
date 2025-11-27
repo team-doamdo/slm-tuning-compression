@@ -1,0 +1,62 @@
+[
+    {
+        "id": 1,
+        "question": "Why are my tomatoes not developing good growth? Answer in short.",
+        "answer": "There are several reasons why your tomatoes aren't developing good growth. Here are some of the most common reasons:\n\n*   **Nutrient Deficiency:** This is the most common reason. Tomatoes need nutrients, particularly nitrogen and phosphorus.\n*   **Poor Soil:** Tomatoes need well-draining soil.\n*   **Disease:** Tomatoes can be affected by diseases such as blight, early blight, or septoria.",
+        "inference_time_sec": 158.82
+    },
+    {
+        "id": 2,
+        "question": "What temperature is good for tomatoes in the ripening stage? Answer in short.",
+        "answer": "Around 70-75° Fahrenheit (21-24° Celsius) is ideal for tomatoes during ripening.",
+        "inference_time_sec": 13.2063
+    },
+    {
+        "id": 3,
+        "question": "Leaves green but wilting; leaves roll and drop; fruits may develop blossom-end rot symptoms. Answer in short.",
+        "answer": "Frost damage",
+        "inference_time_sec": 5.6531
+    },
+    {
+        "id": 4,
+        "question": "What's the prevention using cover crops? Answer in short.",
+        "answer": "Protecting crops.",
+        "inference_time_sec": 4.706
+    },
+    {
+        "id": 5,
+        "question": "One-sided yellowing and wilting of leaves; older leaves become necrotic; smaller fruits. Answer in short.",
+        "answer": "Leaf spot",
+        "inference_time_sec": 5.2894
+    },
+    {
+        "id": 6,
+        "question": "What conditions help tomatoes grow well during the flowering stage? Answer in short.",
+        "answer": "The presence of adequate pollination.",
+        "inference_time_sec": 6.375
+    },
+    {
+        "id": 7,
+        "question": "Why are my tomatoes experiencing leaf curling during the fruit development stage? Answer in short.",
+        "answer": "Leaf curling during fruit development is often a symptom of **nutrient deficiency**, particularly **phosphorus** or **potassium**. \n\n**Short answer:** Nutrient deficiency, especially phosphorus or potassium.",
+        "inference_time_sec": 19.3662
+    },
+    {
+        "id": 8,
+        "question": "What temperature is good for tomatoes in the fruit set stage? Answer in short.",
+        "answer": "Around 70-80° Fahrenheit (21-27° Celsius)",
+        "inference_time_sec": 10.9295
+    },
+    {
+        "id": 9,
+        "question": "Small necrotic spots on upper leaf surfaces and raised white spots on leaves; raised dark-centered white spots on green fruit. Answer in short.",
+        "answer": "Anthracnose",
+        "inference_time_sec": 6.5574
+    },
+    {
+        "id": 10,
+        "question": "Unilateral wilting of plants with light colored streaks on leaf midrib, petiole, and stem. Answer in short.",
+        "answer": "Anthracnosis",
+        "inference_time_sec": 6.1868
+    }
+]

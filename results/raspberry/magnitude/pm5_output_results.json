@@ -1,0 +1,62 @@
+[
+    {
+        "id": 1,
+        "question": "Why are my tomatoes not developing good growth? Answer in short.",
+        "answer": "Tomatoes are self-pollinating plants. They don't \"develop\" good growth; they *produce* fruit. \n\n---\n\nWould you like a more detailed explanation?",
+        "inference_time_sec": 73.2218
+    },
+    {
+        "id": 2,
+        "question": "What temperature is good for tomatoes in the ripening stage? Answer in short.",
+        "answer": "65-75°F (18-24°C)",
+        "inference_time_sec": 10.1839
+    },
+    {
+        "id": 3,
+        "question": "Leaves green but wilting; leaves roll and drop; fruits may develop blossom-end rot symptoms. Answer in short.",
+        "answer": "Okay, here’s a concise summary of those observations:\n\n**Leaves green but wilting;** – This describes plants that are healthy and vigorous, but also susceptible to disease and pests. \n\n**Leaves roll and drop;** – This indicates a plant that sheds its leaves seasonally.\n\n**Fruits may develop blossom-end rot symptoms.** – This suggests a problem with pollination or fruit set. \n\nEssentially, it's a plant with some desirable traits but also with potential issues. \n\n---\n\nDo you want me to elaborate on any of these points, or would you like a different kind of answer?",
+        "inference_time_sec": 59.3007
+    },
+    {
+        "id": 4,
+        "question": "What's the prevention using cover crops? Answer in short.",
+        "answer": "No--till farming, reduced soil erosion, improved water quality.",
+        "inference_time_sec": 9.7594
+    },
+    {
+        "id": 5,
+        "question": "One-sided yellowing and wilting of leaves; older leaves become necrotic; smaller fruits. Answer in short.",
+        "answer": "Here’s a concise summary of the observations:\n\n*   **Yellowing:** Single, pale yellow leaves.\n*   **Wilting:** Early signs of leaf decline.\n*   **Necrotic:** Older leaves show signs of decay.\n*   **Smaller:** Fruits are smaller than typical. \n\n\nLet me know if you’d like me to elaborate on any of these points!",
+        "inference_time_sec": 41.7598
+    },
+    {
+        "id": 6,
+        "question": "What conditions help tomatoes grow well during the flowering stage? Answer in short.",
+        "answer": "Several factors contribute to good tomato growth during flowering:\n\n*   **Adequate Sunlight:** Tomatoes need at least 6-8 hours of direct sunlight daily.\n*   **Warm Temperatures:** Consistent warm weather promotes flowering and fruit set.\n*   **Nutrient Availability:** Sufficient nutrients (especially phosphorus) are crucial for fruit development.\n*   **Water Availability:** Consistent watering is needed for strong growth.\n*   **Pruning:** Removing suckers and lower leaves encourages focus on the upper part of the plant.\n\nThese conditions create an environment where tomatoes can thrive and produce abundant fruit!",
+        "inference_time_sec": 59.1979
+    },
+    {
+        "id": 7,
+        "question": "Why are my tomatoes experiencing leaf curling during the fruit development stage? Answer in short.",
+        "answer": "Leaf curling during fruit development in tomatoes is typically caused by **high temperatures and low humidity** stressing the plant. It’s a common environmental factor, not a disease or pest issue. \n\n**Here’s what you can do to help:**\n\n*   **Provide Shade:** Give them protection from intense afternoon sun.\n*   **Watering:** Water deeply when the soil is dry.\n*   **Fertilizer:** Use a balanced fertilizer according to package directions.\n\nBy understanding this, you can help your tomatoes thrive!",
+        "inference_time_sec": 54.6397
+    },
+    {
+        "id": 8,
+        "question": "What temperature is good for tomatoes in the fruit set stage? Answer in short.",
+        "answer": "65-75°F (18-24°C)",
+        "inference_time_sec": 12.5342
+    },
+    {
+        "id": 9,
+        "question": "Small necrotic spots on upper leaf surfaces and raised white spots on leaves; raised dark-centered white spots on green fruit. Answer in short.",
+        "answer": "This describes **anthracnose**. \n\nLet me know if you’d like me to elaborate on that answer!",
+        "inference_time_sec": 17.3876
+    },
+    {
+        "id": 10,
+        "question": "Unilateral wilting of plants with light colored streaks on leaf midrib, petiole, and stem. Answer in short.",
+        "answer": "Okay, let’s get straight to the point: **Yes.** \n\nThat describes pumpkins! 🎃",
+        "inference_time_sec": 16.4901
+    }
+]

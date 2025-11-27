@@ -1,0 +1,62 @@
+[
+    {
+        "id": 1,
+        "question": "Why are my tomatoes not developing good growth? Answer in short.",
+        "answer": "",
+        "inference_time_sec": 52.798
+    },
+    {
+        "id": 2,
+        "question": "What temperature is good for tomatoes in the ripening stage? Answer in short.",
+        "answer": "",
+        "inference_time_sec": 2.6247
+    },
+    {
+        "id": 3,
+        "question": "Leaves green but wilting; leaves roll and drop; fruits may develop blossom-end rot symptoms. Answer in short.",
+        "answer": "",
+        "inference_time_sec": 3.5066
+    },
+    {
+        "id": 4,
+        "question": "What's the prevention using cover crops? Answer in short.",
+        "answer": "The concept of \"use_cover_crop\" is to create a new concept for the word \"cover_crop\".\n```python\ndef _add_cover_crop()\n```\ndef_add_2_3_7_1_3_7_7_1_3_7_7_1_3_7_7_1_3_7_7_1_3_7_7_1_3_7_7_1_3_7_7_1_3_7_7_1_3_7_7_1_3_7_7_1_3_7_7_1_3_7_7_1_3_7_7_1_3_7_7_1_3_7_7_1_3_7_7_1_3_7_7_1_3_7_7_1_3_7_7_1_3_7_7_1_3_7_7_1_3_7_7_1_3_7_7_1_3_7",
+        "inference_time_sec": 100.4356
+    },
+    {
+        "id": 5,
+        "question": "One-sided yellowing and wilting of leaves; older leaves become necrotic; smaller fruits. Answer in short.",
+        "answer": "",
+        "inference_time_sec": 5.7528
+    },
+    {
+        "id": 6,
+        "question": "What conditions help tomatoes grow well during the flowering stage? Answer in short.",
+        "answer": "**Conditions for Optimal Tomato Growth**\n\n**Key:**\n\n*   **Sunlight:** Tomatoes need at least 6 hours of direct sunlight.\n*   **Soil:** Loamy soil is ideal, well-draining.\n*   **Water:** Consistent moisture, avoiding overwatering.\n*   **Nutrients:** Rich soil, amending with compost.\n*   **Protection:** Protecting from pests and diseases.\n*   **Temperature:** Optimal temperatures (65-77°F).\n*   **Water:** Regular watering during dry periods.\n*   **Sunlight:** Ensure at least 6 hours of direct sunlight.\n*   **Soil:** Loamy soil, well-draining.\n*   **Water:** Consistent moisture, avoiding overwatering.\n*   **Nutrients:** Rich soil, amending with compost.\n*   **Protection:** Protecting from pests and diseases.\n*   **Temperature:** Optimal temperatures (65-77°F).\n*   **Water:** Regular watering during dry periods.\n*   **Sunlight:** Ensure at least",
+        "inference_time_sec": 100.0217
+    },
+    {
+        "id": 7,
+        "question": "Why are my tomatoes experiencing leaf curling during the fruit development stage? Answer in short.",
+        "answer": "Leaf curling in tomatoes is a complex interplay of factors, and while not always a single cause, it can be a combination of factors. Here's a breakdown of the most common reasons and how to address it:\n\n**Key Considerations:**\n\n*   **Nutrient Deficiencies:** Lack of nitrogen, magnesium, or iron can trigger this.\n*   **Environmental Stress:** Temperature fluctuations, prolonged exposure to sunlight, and high humidity can lead to this.\n*   **Fungal Infections:** *Fusarium wilt* is a common culprit.\n*   **Insect Infestations:** *Aphids and whiteflies can be a major factor.\n\n**Solutions:**\n\n*   **Nutrient Correction:** Apply magnesium sulfate and trace elements.\n*   **Temperature Regulation:** Reduce the temperature fluctuations.\n*   **Fungal Control:** Use copper-based fungicides.\n*   **Insect Control:** Use insecticides specifically for aphids and whiteflies.\n*   **Proper Watering:** Water regularly, and water thoroughly.\n*   **Good Ventilation:** Improve air circulation around the plants.",
+        "inference_time_sec": 100.3516
+    },
+    {
+        "id": 8,
+        "question": "What temperature is good for tomatoes in the fruit set stage? Answer in short.",
+        "answer": "",
+        "inference_time_sec": 5.0101
+    },
+    {
+        "id": 9,
+        "question": "Small necrotic spots on upper leaf surfaces and raised white spots on leaves; raised dark-centered white spots on green fruit. Answer in short.",
+        "answer": "",
+        "inference_time_sec": 5.747
+    },
+    {
+        "id": 10,
+        "question": "Unilateral wilting of plants with light colored streaks on leaf midrib, petiole, and stem. Answer in short.",
+        "answer": "",
+        "inference_time_sec": 5.338
+    }
+]

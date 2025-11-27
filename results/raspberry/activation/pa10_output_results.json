@@ -1,0 +1,62 @@
+[
+    {
+        "id": 1,
+        "question": "Why are my tomatoes not developing good growth? Answer in short.",
+        "answer": "Tomatoes aren't growing well because they likely need **more sunlight, nutrients, or water**. \n\nWould you like a more detailed explanation?",
+        "inference_time_sec": 68.7158
+    },
+    {
+        "id": 2,
+        "question": "What temperature is good for tomatoes in the ripening stage? Answer in short.",
+        "answer": "Around 70-75°F (21-24°C) is good.",
+        "inference_time_sec": 11.3311
+    },
+    {
+        "id": 3,
+        "question": "Leaves green but wilting; leaves roll and drop; fruits may develop blossom-end rot symptoms. Answer in short.",
+        "answer": "Water stress.",
+        "inference_time_sec": 4.9399
+    },
+    {
+        "id": 4,
+        "question": "What's the prevention using cover crops? Answer in short.",
+        "answer": "Cover crops prevent erosion and improve soil health.",
+        "inference_time_sec": 6.6042
+    },
+    {
+        "id": 5,
+        "question": "One-sided yellowing and wilting of leaves; older leaves become necrotic; smaller fruits. Answer in short.",
+        "answer": "Nutrient deficiency. \n\nHere’s why:\n\n*   **One-sided yellowing:** Indicates a specific nutrient (often nitrogen or potassium) is lacking on one side of the plant.\n*   **Wilting of leaves:** Often accompanies yellowing as the plant struggles to maintain turgor pressure.\n*   **Necrotic older leaves:**  Happens when the plant can’t maintain water uptake.\n*   **Smaller fruits:** Nutrient deficiencies directly impact fruit development.\n\nWould you like me to elaborate on the causes of nutrient deficiencies?",
+        "inference_time_sec": 53.0655
+    },
+    {
+        "id": 6,
+        "question": "What conditions help tomatoes grow well during the flowering stage? Answer in short.",
+        "answer": "Warm temperatures (around 70-85°F), adequate sunlight, and consistent watering.",
+        "inference_time_sec": 12.6882
+    },
+    {
+        "id": 7,
+        "question": "Why are my tomatoes experiencing leaf curling during the fruit development stage? Answer in short.",
+        "answer": "Leaf curling in tomatoes during fruit development is usually caused by **high temperatures**. It’s a natural defense mechanism to reduce water loss and protect the developing fruit.",
+        "inference_time_sec": 18.1404
+    },
+    {
+        "id": 8,
+        "question": "What temperature is good for tomatoes in the fruit set stage? Answer in short.",
+        "answer": "Around 20-24°C (68-75°F) is ideal.",
+        "inference_time_sec": 13.0583
+    },
+    {
+        "id": 9,
+        "question": "Small necrotic spots on upper leaf surfaces and raised white spots on leaves; raised dark-centered white spots on green fruit. Answer in short.",
+        "answer": "Anthracnose.",
+        "inference_time_sec": 7.3776
+    },
+    {
+        "id": 10,
+        "question": "Unilateral wilting of plants with light colored streaks on leaf midrib, petiole, and stem. Answer in short.",
+        "answer": "**Silverleaf blight** \n\nHere’s why:\n\n*   **Unilateral wilting:** Characteristic of silverleaf.\n*   **Light colored streaks:** Distinctive pattern of streaks on the midribs, petioles, and stems.\n\nWould you like me to elaborate on any aspect of this answer?",
+        "inference_time_sec": 34.2812
+    }
+]

@@ -1,0 +1,62 @@
+[
+    {
+        "id": 1,
+        "question": "Why are my tomatoes not developing good growth? Answer in short.",
+        "answer": "There are several reasons why your tomatoes aren't developing good growth. Here's a breakdown of the most common causes:\n\n*   **Nutrient deficiencies:** Tomatoes need a lot of nutrients, especially nitrogen, phosphorus, and potassium.\n*   **Pests:** Aphids, whiteflies, and other pests can stunt growth.\n*   **Watering issues:** Too much or too little watering can cause problems.\n*   **Root problems:** Root rot or nematode infestations can stunt growth.",
+        "inference_time_sec": 90.459
+    },
+    {
+        "id": 2,
+        "question": "What temperature is good for tomatoes in the ripening stage? Answer in short.",
+        "answer": "68°F (20°C)",
+        "inference_time_sec": 7.6769
+    },
+    {
+        "id": 3,
+        "question": "Leaves green but wilting; leaves roll and drop; fruits may develop blossom-end rot symptoms. Answer in short.",
+        "answer": "Frost",
+        "inference_time_sec": 5.4496
+    },
+    {
+        "id": 4,
+        "question": "What's the prevention using cover crops? Answer in short.",
+        "answer": "Protecting crops.",
+        "inference_time_sec": 4.7647
+    },
+    {
+        "id": 5,
+        "question": "One-sided yellowing and wilting of leaves; older leaves become necrotic; smaller fruits. Answer in short.",
+        "answer": "Premature fruit drop",
+        "inference_time_sec": 6.5578
+    },
+    {
+        "id": 6,
+        "question": "What conditions help tomatoes grow well during the flowering stage? Answer in short.",
+        "answer": "The flowering stage is the period of time when a tomato plant is developing flowers. Conditions that help tomatoes grow well during this stage are: **temperature, sunlight, and water.**",
+        "inference_time_sec": 17.4223
+    },
+    {
+        "id": 7,
+        "question": "Why are my tomatoes experiencing leaf curling during the fruit development stage? Answer in short.",
+        "answer": "Aphids (tiny green insects) are the most likely cause.",
+        "inference_time_sec": 9.0772
+    },
+    {
+        "id": 8,
+        "question": "What temperature is good for tomatoes in the fruit set stage? Answer in short.",
+        "answer": "Warm (around 70-80°F / 21-27°C)",
+        "inference_time_sec": 12.2652
+    },
+    {
+        "id": 9,
+        "question": "Small necrotic spots on upper leaf surfaces and raised white spots on leaves; raised dark-centered white spots on green fruit. Answer in short.",
+        "answer": "Anthracnose",
+        "inference_time_sec": 6.5655
+    },
+    {
+        "id": 10,
+        "question": "Unilateral wilting of plants with light colored streaks on leaf midrib, petiole, and stem. Answer in short.",
+        "answer": "Striations",
+        "inference_time_sec": 6.288
+    }
+]

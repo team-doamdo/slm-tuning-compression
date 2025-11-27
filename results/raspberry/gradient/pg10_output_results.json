@@ -1,0 +1,62 @@
+[
+    {
+        "id": 1,
+        "question": "Why are my tomatoes not developing good growth? Answer in short.",
+        "answer": "Here's a breakdown of why tomatoes might not be thriving:\n\n**1. Nutrient Deficiencies:**\n\n*   **Lack of Nitrogen (N):** Tomatoes need nitrogen for leafy growth.  If they're nitrogen-deficient, they'll be stunted and pale.\n*   **Phosphorus (P) Deficiency:**  Crucial for root development and flowering.  Lack of phosphorus can stunt growth.\n*   **Potassium (K) Deficiency:**  Important for flowering and fruit development.  A deficiency can result in weak stems and small fruits.\n\n**2. Environmental Factors:**\n\n*   **Sunlight:** Tomatoes need at least 6 hours of sunlight.  If they're in shade, they'll be weak and pale.\n*   **Temperature:** Temperatures that are too hot or too cold can hinder growth.\n*   **Watering:**  Too much or too little water can be detrimental.\n\n**3. Pest and Disease Issues:**\n\n*   **Pests:**  Aphids, tomato hornworms, and other pests can damage plants and stunt growth.\n*   **Diseases",
+        "inference_time_sec": 100.3885
+    },
+    {
+        "id": 2,
+        "question": "What temperature is good for tomatoes in the ripening stage? Answer in short.",
+        "answer": "Here's a breakdown of optimal temperatures for different stages of tomato ripening:\n\n*   **Green/Blossom:** 65-86°F (16-28°C) -  This is the ideal temperature range for the tomatoes to start blooming.\n*   **Ripening (Green):** 60-80°F (16-28°C) - This is the optimal temperature range for the tomatoes to start ripening.\n*   **Ripening (Yellow):** 70-80°F (21-28°C) - This is the optimal temperature for ripening tomatoes.\n*   **Ripening (Red):** 70-80°F (21-28°C) - This is the optimal temperature for ripening tomatoes.\n\n**Key takeaway:**\n\n*   **Optimal Range:** 70-80°F (21-28°C) is the most commonly cited optimal range for the ripening of tomatoes.\n\n**In short:**\n70°F (21°C) is the most",
+        "inference_time_sec": 100.1917
+    },
+    {
+        "id": 3,
+        "question": "Leaves green but wilting; leaves roll and drop; fruits may develop blossom-end rot symptoms. Answer in short.",
+        "answer": "Let $x$ be the number of leaves and $y$ be the number of leaves.\nThe question is to find $x$ and $y$ such that $x$ and $y$ are both greater than 0.\nLet $x$ and $y$ be such that $x$ and $y$ are both greater than 0.\nLet $x$ and $y$ be such that $x$ and $y$ are both greater than 0.\nLet $x$ and $y$ be such that $x$ and $y$ are both greater than 0.\nLet $x$ and $y$ be such that $x$ and $y$ are both greater than 0.\nLet $x$ and $y$ be such that $x$ and $y$ are both greater than 0.\nLet $x$ and $y$ be such that $x$ and $y$ are both greater than 0.\n\nLet $x$ and $y$ be such that $x$ and $y$ are both greater than 0.",
+        "inference_time_sec": 100.1354
+    },
+    {
+        "id": 4,
+        "question": "What's the prevention using cover crops? Answer in short.",
+        "answer": "```python\ndef solve(n):\n    \"\"\"\n    # Iterate over the possible values of n.\n    for i in range(1, n):\n        if 1 <= 1:\n            return True\n    else:\n        return False\n    \"\"\"\n    return True\n    else:\n        return False\n    \"\"\"\n    return True\n    else:\n        return False\n    \"\"\"\n    return True\n    else:\n        return False\n    \"\"\"\n    return True\n    else:\n        return False\n    \"\"\"\n    return True\n    else:\n        return False\n    \"\"\"\n    return True\n    else:\n        return False\n    \"\"\"\n    return True\n    else:\n        return False\n    \"\"\"\n    return True\n    else:\n    \"\"\"\n    return True\n    else:\n    \"\"\"\n    return True\n    else:\n    \"\"\"\n    return True\n    else:\n    \"\"\"\n    return True\n    else:\n    \"\"\"\n    return True\n    else:\n    \"\"\"\n    return True\n    else:",
+        "inference_time_sec": 100.2879
+    },
+    {
+        "id": 5,
+        "question": "One-sided yellowing and wilting of leaves; older leaves become necrotic; smaller fruits. Answer in short.",
+        "answer": "Let $x$ and $y$ be the roots of a polynomial.\nLet $x$ and $y$ be the roots of a polynomial $P(x, y)$.\nSince the roots of $P(x, y)$ are roots of a polynomial $P(x, y)$, we have $x$ and $y$.\nLet $x$ and $y$ be the roots of a polynomial $P(x, y)$.\nSince the roots of $P(x, y)$ are roots of a polynomial $P(x, y)$, we have $x$ and $y$.\nWe are given that the roots of $P(x, y)$ are roots of a polynomial $P(x, y)$.\nWe are given that the roots of $P(x, y)$ are roots of a polynomial $P(x, y)$.\nWe are given that the roots of $P(x, y)$ are roots of a polynomial $P(x, y)$.\nLet $x$ and $y$ be the roots of a polynomial $P(x, y)$.\nWe are given that",
+        "inference_time_sec": 100.2401
+    },
+    {
+        "id": 6,
+        "question": "What conditions help tomatoes grow well during the flowering stage? Answer in short.",
+        "answer": "Here's a breakdown of what conditions help tomatoes thrive during the flowering stage:\n\n**1.  Optimal Temperature:**\n\n*   **Warm Temperatures:** Tomatoes thrive in temperatures between 70°F (21°C) and 86°F (29°C).  Consistent temperatures are crucial for proper flowering and fruit set.  Temperatures above 86°F (29°C) can lead to blossom drop (flowers falling off) and poor fruit set.\n\n**2.  Light:**\n\n*   **Full Sun:** Tomatoes need at least 6-8 hours of direct sunlight daily.  This is vital for energy production and flowering.\n\n**3.  Watering:**\n\n*   **Consistent Moisture:**  Watering consistently is crucial, especially during flowering.  However, avoid overwatering, as it can lead to root rot.  Aim for moist soil, not soggy.\n\n**4.  Nutrient Availability:**\n\n*   **Balanced Fertilization:**  Tomatoes need a balanced supply of nutrients, particularly phosphorus (P) and potassium (K) during flowering.  Phosphorus promotes",
+        "inference_time_sec": 100.0135
+    },
+    {
+        "id": 7,
+        "question": "Why are my tomatoes experiencing leaf curling during the fruit development stage? Answer in short.",
+        "answer": "Leaf curling in tomatoes during fruit development is often caused by a combination of factors, but here's a breakdown of the most common reasons:\n\n**1.  Fusarium Wilt (Fusarium Virulentum):**\n\n*   **Why it happens:** This is the *most frequent** cause.  Fusarium wilt is a fungal disease that attacks the roots, disrupting nutrient uptake.  As the plant focuses its energy on fruit production, it weakens and curls its leaves to conserve resources.\n*   **Symptoms:**  Leaves curl upwards, often starting on the bottom leaves first.  Leaves may also wilt and turn yellow.\n*   **Treatment:**  Preventative measures are key.  Choose disease-resistant varieties (like 'Roma', 'Florica', 'Mountain', 'TomThumb').  Maintain good soil health and proper ventilation around the plants.\n\n**2.  Spider Mites:**\n\n*   **Why it happens:**  These tiny pests feed on the plant's sap, causing leaves to curl upwards.  They are often more prevalent in warm, humid conditions.\n*   **Symptoms:**  Curling is usually asymmetrical",
+        "inference_time_sec": 100.2297
+    },
+    {
+        "id": 8,
+        "question": "What temperature is good for tomatoes in the fruit set stage? Answer in short.",
+        "answer": "Here's a breakdown of optimal temperatures for tomato plants in the fruit set stage:\n\n*   **Temperature:** 65-85°F (16-28°C) - This is the ideal range.\n\n*   **Humidity:** 60-80% - High humidity can hinder fruit set.\n\n**Why this range is ideal:**\n\n*   **Temperature:**  Higher temperatures can cause tomatoes to set prematurely, resulting in smaller, inferior fruit.  Lower temperatures can slow down the fruit set process.\n*   **Humidity:** High humidity can encourage fungal diseases.\n\n**To maximize fruit set:**\n\n*   **Temperature:**  Aim for 70-80°F (22-28°C).\n*   **Humidity:**  Maintain 60-70% humidity.\n\n**In short:**\n\n*   **Temperature:** 75°F (28°C)\n*   **Humidity:** 65%\n\n**Important Note:**\n\n*   **Temperature:**  Avoid extremes.\n*   **Humidity:**  Manage humidity.\n\n**Final Answer:**",
+        "inference_time_sec": 100.1504
+    },
+    {
+        "id": 9,
+        "question": "Small necrotic spots on upper leaf surfaces and raised white spots on leaves; raised dark-centered white spots on green fruit. Answer in short.",
+        "answer": "Okay, let's break down this answer. It seems like a description of a plant disease. Here's a breakdown of what this means:\n\n**Understanding the Symptoms:**\n\n*   **\"Small, necrotic spots on upper leaf surfaces\"**: This indicates a fungal or bacterial infection on the leaves. \"Necrotic\" means \"dead\" or \"brownish-colored\" in this context.  The fact that they're on the *upper* leaves suggests the pathogen is affecting the surface, possibly due toering the leaf tissue.\n\n*   **\"Raised, white spots on leaves\"**: This is a sign of a fungal infection. \"Raised\" suggests that the fungus is growing in the tissue of the leaves. \"White\" indicates that the fungus is a fungal species.\n\n*   **\"Raised, white spots on fruit\"**: This is also indicative of a fungal infection. The fact that these are on the fruit indicates that the disease is spreading to the fruit.\n\n**Conclusion:**\n\nBased on these symptoms, it's highly likely that the plant is suffering from a fungal disease.\n\n**In short",
+        "inference_time_sec": 100.3226
+    },
+    {
+        "id": 10,
+        "question": "Unilateral wilting of plants with light colored streaks on leaf midrib, petiole, and stem. Answer in short.",
+        "answer": "Let $x$ be the number of plants with the given characteristics.\nLet $x$ be the number of plants with the given characteristics.\nLet $x$ be the number of plants with the given characteristics.\nLet $x$ be the number of plants with the given characteristics.\nLet $x$ be the number of plants with the given characteristics.\nLet $x$ be the number of plants with the given characteristics.\nLet $x$ be the number of plants with the given characteristics.\nLet $x$ be the number of plants with the given characteristics.\nLet $x$ be the number of plants with the given characteristics.\nLet $x$ be the number of plants with the given characteristics.\nLet $x$ be the number of plants with the given characteristics.\nLet $x$ be the number of plants with the given characteristics.\nLet $x$ be the number of plants with the given characteristics.\nLet $x$ be the number of plants with the given characteristics.\nLet $x$ be the number of plants with the given characteristics.\nLet $x$ be the",
+        "inference_time_sec": 100.1446
+    }
+]

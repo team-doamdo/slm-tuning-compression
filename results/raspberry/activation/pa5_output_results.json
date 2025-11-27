@@ -1,0 +1,62 @@
+[
+    {
+        "id": 1,
+        "question": "Why are my tomatoes not developing good growth? Answer in short.",
+        "answer": "Poor tomato growth can be due to several factors like:\n\n*   **Nutrient deficiencies:** Lack of essential nutrients like nitrogen, phosphorus, or potassium.\n*   **Poor soil:** Compacted, poorly drained soil.\n*   **Lack of sunlight:** Not enough direct sunlight.\n*   **Temperature:** Too hot or too cold.\n\nTo help me give you more specific advice, could you tell me a bit more about your situation (e.g., soil type, sunlight, watering habits)?",
+        "inference_time_sec": 42.9518
+    },
+    {
+        "id": 2,
+        "question": "What temperature is good for tomatoes in the ripening stage? Answer in short.",
+        "answer": "65-77°F (18-25°C) – a range is ideal.",
+        "inference_time_sec": 12.0865
+    },
+    {
+        "id": 3,
+        "question": "Leaves green but wilting; leaves roll and drop; fruits may develop blossom-end rot symptoms. Answer in short.",
+        "answer": "Likely **calcium deficiency** – possibly combined with inconsistent watering. \n\n**Here’s why:**\n\n*   **Green leaves, wilting:** Indicates a lack of nutrient uptake.\n*   **Rolling and dropping leaves:** A classic sign of calcium deficiency.\n*   **Blossom-end rot:** Directly linked to calcium issues.\n\n**To help me narrow it down, could you tell me:**\n\n*   What kind of plant is it? (e.g., tomato, pepper, squash)\n*   What kind of soil do you have? (e.g., sandy, clay, well-draining)\n*   How often do you water?",
+        "inference_time_sec": 63.1393
+    },
+    {
+        "id": 4,
+        "question": "What's the prevention using cover crops? Answer in short.",
+        "answer": "Cover crops prevent erosion, improve soil health, and reduce nutrient runoff.",
+        "inference_time_sec": 9.4019
+    },
+    {
+        "id": 5,
+        "question": "One-sided yellowing and wilting of leaves; older leaves become necrotic; smaller fruits. Answer in short.",
+        "answer": "Sunscald and nutrient deficiencies. \n\n**Here’s a breakdown of why:**\n\n*   **One-sided yellowing & wilting:** Often indicates uneven sunlight exposure, leading to localized heat stress.\n*   **Necrotic older leaves:**  Suggests nutrient deficiencies, particularly of magnesium or potassium.\n*   **Smaller fruits:**  Linked to nutrient deficiencies and often exacerbated by heat stress.\n\n**To help me give you more specific advice, could you tell me:**\n\n*   What kind of plant is it?\n*   Where is the plant located (e.g., full sun, partial shade)?\n*   What type of soil does it have?",
+        "inference_time_sec": 64.6573
+    },
+    {
+        "id": 6,
+        "question": "What conditions help tomatoes grow well during the flowering stage? Answer in short.",
+        "answer": "Consistent moisture, moderate temperatures, and adequate sunlight are key for good tomato flowering.",
+        "inference_time_sec": 11.0334
+    },
+    {
+        "id": 7,
+        "question": "Why are my tomatoes experiencing leaf curling during the fruit development stage? Answer in short.",
+        "answer": "Leaf curling in tomatoes during fruit development is usually a sign of **high humidity** – it's their way of trying to reduce moisture loss and protect the developing fruit.",
+        "inference_time_sec": 18.9724
+    },
+    {
+        "id": 8,
+        "question": "What temperature is good for tomatoes in the fruit set stage? Answer in short.",
+        "answer": "65-75°F (18-24°C) is ideal.",
+        "inference_time_sec": 12.7514
+    },
+    {
+        "id": 9,
+        "question": "Small necrotic spots on upper leaf surfaces and raised white spots on leaves; raised dark-centered white spots on green fruit. Answer in short.",
+        "answer": "Likely **anthracnose**. \n\nHere’s why:\n\n*   **Necrotic spots on leaves:** Classic symptom of anthracnose.\n*   **Raised white spots on leaves:** Often caused by fungal spores.\n*   **Raised dark-centered white spots on fruit:** Another hallmark of anthracnose.\n\n**Disclaimer:** *I am an AI Chatbot and not a plant pathologist. For a definitive diagnosis and treatment plan, consult with a local agricultural extension office or a certified plant diagnostician.*",
+        "inference_time_sec": 51.044
+    },
+    {
+        "id": 10,
+        "question": "Unilateral wilting of plants with light colored streaks on leaf midrib, petiole, and stem. Answer in short.",
+        "answer": "**Magnesium deficiency.** \n\nIt’s a classic symptom of magnesium deficiency, often referred to as interveinal chlorosis.",
+        "inference_time_sec": 17.5735
+    }
+]

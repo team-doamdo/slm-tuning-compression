@@ -1,0 +1,62 @@
+[
+    {
+        "id": 1,
+        "question": "Why are my tomatoes not developing good growth? Answer in short.",
+        "answer": "```",
+        "inference_time_sec": 7.7991
+    },
+    {
+        "id": 2,
+        "question": "What temperature is good for tomatoes in the ripening stage? Answer in short.",
+        "answer": "```python\ndef main():\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"",
+        "inference_time_sec": 100.0241
+    },
+    {
+        "id": 3,
+        "question": "Leaves green but wilting; leaves roll and drop; fruits may develop blossom-end rot symptoms. Answer in short.",
+        "answer": "```python\ndef solve():\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"",
+        "inference_time_sec": 100.2389
+    },
+    {
+        "id": 4,
+        "question": "What's the prevention using cover crops? Answer in short.",
+        "answer": "```python\ndef prevent_crop(crop_type, crop_index):\n    //  If the length of the current crop is greater than the\n    //  If the current crop is greater than the\n    //  If the current crop is greater than the\n    //  If the current crop is greater than the\n    //  If the current crop is greater than the\n    //  If the current crop is greater than the\n    //  If the current crop is greater than the\n    //  If the current crop is greater than the\n    //  If the current crop is greater than the\n    //  If the current crop is greater than the\n    //  If the current crop is greater than the\n    //  If the current crop is greater than the\n    //  If the current crop is greater than the\n    //  If the current crop is greater than the\n    //  If the current crop is greater than the\n    //  If the current crop is greater than the\n    //  If the current crop is greater than the\n    //  If the current crop is greater than the\n    //  If the",
+        "inference_time_sec": 100.0681
+    },
+    {
+        "id": 5,
+        "question": "One-sided yellowing and wilting of leaves; older leaves become necrotic; smaller fruits. Answer in short.",
+        "answer": "```python\ndef solve(n):\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"",
+        "inference_time_sec": 100.1645
+    },
+    {
+        "id": 6,
+        "question": "What conditions help tomatoes grow well during the flowering stage? Answer in short.",
+        "answer": "",
+        "inference_time_sec": 4.4952
+    },
+    {
+        "id": 7,
+        "question": "Why are my tomatoes experiencing leaf curling during the fruit development stage? Answer in short.",
+        "answer": "",
+        "inference_time_sec": 4.1482
+    },
+    {
+        "id": 8,
+        "question": "What temperature is good for tomatoes in the fruit set stage? Answer in short.",
+        "answer": "```python\ndef main():\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"",
+        "inference_time_sec": 100.3607
+    },
+    {
+        "id": 9,
+        "question": "Small necrotic spots on upper leaf surfaces and raised white spots on leaves; raised dark-centered white spots on green fruit. Answer in short.",
+        "answer": "",
+        "inference_time_sec": 6.4353
+    },
+    {
+        "id": 10,
+        "question": "Unilateral wilting of plants with light colored streaks on leaf midrib, petiole, and stem. Answer in short.",
+        "answer": "```python\ndef solve():\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"\n    \"\"\"",
+        "inference_time_sec": 100.4057
+    }
+]

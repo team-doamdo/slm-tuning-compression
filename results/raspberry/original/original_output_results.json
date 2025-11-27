@@ -1,0 +1,62 @@
+[
+    {
+        "id": 1,
+        "question": "Why are my tomatoes not developing good growth? Answer in short.",
+        "answer": "Tomato growth problems can stem from several things:\n\n*   **Sunlight:** Need at least 6-8 hours daily.\n*   **Soil:** Poor drainage or lacking nutrients.\n*   **Watering:** Too much or too little.\n*   **Temperature:** Too hot or too cold.\n*   **Pests/Diseases:** Check for issues.\n\nTo help me narrow it down, could you tell me a little more about your setup (e.g., where are they growing, how often do you water, what kind of soil)?",
+        "inference_time_sec": 100.3478
+    },
+    {
+        "id": 2,
+        "question": "What temperature is good for tomatoes in the ripening stage? Answer in short.",
+        "answer": "65-75°F (18-24°C) is ideal for ripening tomatoes.",
+        "inference_time_sec": 15.1455
+    },
+    {
+        "id": 3,
+        "question": "Leaves green but wilting; leaves roll and drop; fruits may develop blossom-end rot symptoms. Answer in short.",
+        "answer": "Calcium deficiency.",
+        "inference_time_sec": 6.9523
+    },
+    {
+        "id": 4,
+        "question": "What's the prevention using cover crops? Answer in short.",
+        "answer": "Cover crops prevent erosion, improve soil health, suppress weeds, and can even add nutrients back to the soil – all without needing tilling! \n\nEssentially, they protect and revitalize the land.",
+        "inference_time_sec": 22.251
+    },
+    {
+        "id": 5,
+        "question": "One-sided yellowing and wilting of leaves; older leaves become necrotic; smaller fruits. Answer in short.",
+        "answer": "Likely **Magnesium deficiency**. \n\nIt’s a common issue, often exacerbated by alkaline soils.",
+        "inference_time_sec": 15.5693
+    },
+    {
+        "id": 6,
+        "question": "What conditions help tomatoes grow well during the flowering stage? Answer in short.",
+        "answer": "For optimal tomato flowering, you need:\n\n*   **Consistent Warmth:** 70-85°F (21-29°C) is ideal.\n*   **Adequate Sunlight:** 6-8 hours daily.\n*   **Consistent Watering:** Avoid stressing the plant.\n*   **Balanced Fertilization:** Focus on phosphorus and potassium.\n*   **Good Air Circulation:** Prevents fungal diseases.\n\nWould you like me to elaborate on any of these points?",
+        "inference_time_sec": 52.4756
+    },
+    {
+        "id": 7,
+        "question": "Why are my tomatoes experiencing leaf curling during the fruit development stage? Answer in short.",
+        "answer": "Leaf curling in tomatoes during fruit development is most often caused by **high temperatures and/or water stress**. It's a defense mechanism to reduce sun exposure and conserve water. \n\nHere's a breakdown:\n\n*   **Heat:** Temperatures above 85°F (29°C) trigger curling.\n*   **Water:** Lack of consistent watering can also cause it.\n\n**To help:** Provide consistent watering, shade during the hottest parts of the day, and ensure good air circulation.",
+        "inference_time_sec": 52.6309
+    },
+    {
+        "id": 8,
+        "question": "What temperature is good for tomatoes in the fruit set stage? Answer in short.",
+        "answer": "65-85°F (18-29°C) is ideal for fruit set in tomatoes.",
+        "inference_time_sec": 15.8656
+    },
+    {
+        "id": 9,
+        "question": "Small necrotic spots on upper leaf surfaces and raised white spots on leaves; raised dark-centered white spots on green fruit. Answer in short.",
+        "answer": "Likely **anthracnose** or **white mold**. \n\n**Action:** Improve air circulation, remove affected leaves/fruit, and consider a fungicide if severe.",
+        "inference_time_sec": 22.4445
+    },
+    {
+        "id": 10,
+        "question": "Unilateral wilting of plants with light colored streaks on leaf midrib, petiole, and stem. Answer in short.",
+        "answer": "Likely **Phosphorus Deficiency**. \n\nIt’s a classic symptom – light streaking indicates a lack of phosphorus uptake. \n\n**Important:** Confirm with a soil test for accurate diagnosis.",
+        "inference_time_sec": 24.3973
+    }
+]
