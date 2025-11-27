@@ -65,21 +65,33 @@ def run_ollama_tests(model: str, prompt_list: List[str]) -> List[Dict[str, Any]]
         print(f"⚠️ Ollama 클라이언트 초기화 오류: {e}")
         return test_results
 
+    TIMEOUT_SEC = 100  # ✅ 여기서 타임아웃 시간 설정
+
     for i, prompt in enumerate(prompt_list):
         print(f"\n[{i+1}/{len(prompt_list)}] 질문: {prompt}")
 
         start_time = time.time()
+        collected_text = ""
         
         try:
-            response = client.generate(
+            stream = client.generate(
                 model=model,
                 prompt=prompt,
                 stream=False
             )
+
+            for chunk in stream:
+                token = chunk.get("response", "")
+                collected_text += token
+
+                elapsed = time.time() - start_time
+                if elapsed >= TIMEOUT_SEC:
+                    print(f"⏱️ 타임아웃! {TIMEOUT_SEC}초 초과 → 생성 중단")
+                    break
             
             end_time = time.time()
             inference_time = end_time - start_time
-            answer = response['response'].strip()
+            answer = collected_text.strip()
 
             # 결과를 딕셔너리 형태로 저장
             test_results.append({
